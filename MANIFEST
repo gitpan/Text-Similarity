@@ -3,5 +3,8 @@ Makefile.PL
 MANIFEST
 README
 t/Text-Similarity.t
+t/Text-Similarity-Overlaps.t
+bin/text_compare.pl
+lib/Text/OverlapFinder.pm
 lib/Text/Similarity.pm
 lib/Text/Similarity/Overlaps.pm
