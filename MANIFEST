@@ -1,0 +1,7 @@
+Changes
+Makefile.PL
+MANIFEST
+README
+t/Text-Similarity.t
+lib/Text/Similarity.pm
+lib/Text/Similarity/Overlaps.pm

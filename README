@@ -1,0 +1,25 @@
+Text-Similarity version 0.01
+============================
+
+INSTALLATION
+
+To install this module type the following:
+
+   perl Makefile.PL
+   make
+   make test
+   make install
+
+DEPENDENCIES
+
+This module requires these other modules and libraries:
+
+   WordNet::Similarity
+
+COPYRIGHT AND LICENCE
+
+Copyright (C) 2004 by Jason Michelizzi and Ted Pedersen
+
+This distribution is free software; you may redistribute it and/or modify
+under the terms of the GNU General Public License.
+
