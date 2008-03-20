@@ -1,24 +1,5 @@
 package Text::OverlapFinder;
 
-# Text::OverlapFinder
-
-# Copyright (C) 2004 by Jason Michelizzi, Ted Pedersen, 
-# Siddharth Patwardhan, and Satanjeev Banerjee
-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
 use strict;
 use warnings;
 
@@ -301,13 +282,27 @@ __END__
 Text::OverlapFinder - find overlaps in strings
 
 =head1 SYNOPSIS
+ 
+    # this will list out the overlaps found in two strings
+    # note that the overlaps are found among space separated
+    # tokens, there are no partial word matches
+    # ('cat' will not match 'at' or 'cats', for example)
 
     use Text::OverlapFinder;
     my $finder = Text::OverlapFinder->new;
-    my $overlaps = $finder->getOverlaps ($string1, $string2);
+    defined $finder or die "Construction of Text::OverlapFinder failed";
+
+    my $string1 = 'aaa bbb ccc ddd eee';
+    my $string2 = 'aa bbb ccc dd ee aaa';
+
+    # overlaps is a hash of references to the overlaps found
+    # len1 and len2 are the lengths of the strings in terms of words
+
+    my ($overlaps, $len1, $len2) = $finder->getOverlaps ($string1, $string2); 
     foreach my $overlap (keys %$overlaps) {
         print "$overlap occurred $overlaps->{$overlap} times.\n";
     }
+    print "length of string 1 = $len1 length of string 2 = $len2\n";
 
 =head1 DESCRIPTION
 
@@ -315,27 +310,41 @@ This module is useful for efficiently finding word overlaps in strings.
 
 =head1 AUTHORS
 
-Jason Michelizzi, E<lt>jmichelizzi at sourceforge.netE<gt>
+Ted Pedersen, University of Minnesota, Duluth
+tpederse at d.umn.edu
 
-Ted Pedersen, E<lt>tpederse at d.umn.eduE<gt>
+Siddharth Patwardhan 
+sidd at cs.utah.edu
 
-Siddharth Patwardhan, E<lt>sidd at cs.utah.eduE<gt>
+Satanjeev Banerjee
+banerjee at cs.cmu.edu
 
-Satanjeev Banerjee, E<lt>satanjee+ at cs.cmu.eduE<gt>
+Jason Michelizzi 
+
+Last modified by:
+$Id: OverlapFinder.pm,v 1.8 2008/03/20 04:31:34 tpederse Exp $
 
 =head1 BUGS
 
-None.
-
-To submit a bug report, e-mail E<lt>jmichelizzi at sourceforge.netE<gt>.
+None known.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004 by Jason Michelizzi, Ted Pedersen, Siddharth
+Copyright (C) 2004-2008 by Jason Michelizzi, Ted Pedersen, Siddharth 
 Patwardhan, and Satanjeev Banerjee
 
-This library is free software; you may redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2 or,
-at your option, any later version.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 =cut

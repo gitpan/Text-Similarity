@@ -1,45 +1,26 @@
 package Text::Similarity;
 
-# Text::Similarity
-# Copyright (C) 2004, Jason Michelizzi and Ted Pedersen
-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
 use 5.006;
 use strict;
 use warnings;
 
-
-use constant {
-    COMPFILE => "compfile",
-    STEM     => "stem",
-    VERBOSE  => "verbose",
-    STOPLIST => "stoplist",
-    NORMALIZE => "normalize"
-    };
+use constant COMPFILE => "compfile";
+use constant STEM     => "stem";
+use constant VERBOSE  => "verbose";
+use constant STOPLIST => "stoplist";
+use constant NORMALIZE => "normalize";
 
 require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 # Attributes -- these all have lvalue accessor methods, use those methods
 # instead of accessing directly.  If you add another attribute, be sure
 # to take the appropriate action in the DESTROY method; otherwise, a memory
 # leak could occur.
+
 my %errorString;
 my %compounds;
 my %verbose;
@@ -261,10 +242,21 @@ Text::Similarity - module for measuring the similarity of text documents.
 This module is a superclass for other modules.
 
 =head1 SYNOPSIS
+ 
+  # this will return an un-normalized score that just gives the 
+  # number of overlaps - this is same synopsis as in Text/Overlaps.pm
 
   use Text::Similarity::Overlaps;
   my $mod = Text::Similarity::Overlaps->new;
+  defined $mod or die "Construction of Text::Similarity::Overlaps failed";
+  
+  # adjust file names to reflect true relative position
+  # these paths are valid from lib/Text/
+  my $text_file1 = '../../t/test1.txt';
+  my $text_file2 = '../../t/test2.txt';
+
   my $score = $mod->getSimilarity ($text_file1, $text_file2);
+  print "The similarity of $text_file1 and $text_file2 is : $score\n";
 
 =head1 DESCRIPTION
 
@@ -273,23 +265,37 @@ of text document similarity.
 
 =head1 SEE ALSO
 
-Text::Similarity::Overlaps
-
-http://text-similarity.sourceforge.net
-
 =head1 AUTHOR
 
-Jason Michelizzi, E<lt>jmichelizzi at sourceforge.netE<gt>
+Ted Pedersen, University of Minnesota, Duluth
+tpederse at d.umn.edu
 
-Ted Pedersen, E<lt>tpederse at d.umn.eduE<gt>
+Siddharth Patwardhan
+sidd at cs.utah.edu
+
+Jason Michelizzi
+
+Last modified by :
+$Id: Similarity.pm,v 1.10 2008/03/20 01:41:44 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004 by Jason Michelizzi, Ted Pedersen, and Siddharth
+Text::Similarity
+Copyright (C) 2004-2008, Ted Pdersen, Jason Michelizzi, and Siddharth 
 Patwardhan
 
-This library is free software; you may redistribute it and/or modify
-it under the terms of the GNU General Public License, version 2 or,
-at your option, any later version.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 =cut

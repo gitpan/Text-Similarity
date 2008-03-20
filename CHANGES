@@ -1,0 +1,53 @@
+NAME
+    CHANGES.pod
+
+SYNOPSIS
+    Revision history for Perl module Text::Similarity
+
+DESCRIPTION
+    0.03
+        Released March 20, 2008 all changes by TDP
+
+        fix divide by zero errors reported on cpan by cernst at esoft.com,
+        who also provided fix
+        update test cases to improve coverage of partial matches and no
+        matches
+        update synopsis examples so they can be run via cut and paste
+        improve README content to make it more descriptive
+        introduce /doc directory for pod of INSTALL README and CHANGES
+        introduce 'use constant' to support perl 5.6
+
+    0.02
+        Released October 16, 2004, all changes by JM
+
+        fixed overlap finding & added new module Text::OverlapFinder
+        improved command-line interface
+        improved documentation and help messages
+        added support for a stoplist
+
+    0.01
+        Released September 23, 2004, all changes by JM
+
+        original version; created by h2xs 1.23 with options -b 5.6.0 -A -X
+        Text::Similarity
+
+AUTHORS
+     Ted Pedersen, University of Minnesota, Duluth
+     tpederse at d.umn.edu
+
+    This document last modified by : $Id: CHANGES.pod,v 1.4 2008/03/20
+    02:43:29 tpederse Exp $
+
+SEE ALSO
+COPYRIGHT AND LICENSE
+    Copyright (c) 2004-2008 Ted Pedersen
+
+    Permission is granted to copy, distribute and/or modify this document
+    under the terms of the GNU Free Documentation License, Version 1.2 or
+    any later version published by the Free Software Foundation; with no
+    Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+
+    Note: a copy of the GNU Free Documentation License is available on the
+    web at <http://www.gnu.org/copyleft/fdl.html> and is included in this
+    distribution as FDL.txt.
+

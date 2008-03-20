@@ -1,22 +1,5 @@
 #!/usr/local/bin/perl
 
-# text_compare.pl
-# Copyright (C) 2004, Jason Michelizzi and Ted Pedersen
-
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-
-# You should have received a copy of the GNU General Public License
-# along with this program; if not, write to the Free Software
-# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
 use strict;
 use warnings;
 use 5.006;
@@ -26,7 +9,7 @@ use Getopt::Long;
 
 sub formatNumber($);
 
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 our ($verbose, $stem, $compfile, $type, $stoplist, $help, $version);
 
@@ -50,7 +33,7 @@ if ($help) {
 elsif ($version) {
     print <<"EOT";
 text_compare.pl version ${VERSION}
-Copyright (C) 2004, Jason Michelizzi and Ted Pedersen
+Copyright (C) 2004-2008, Jason Michelizzi and Ted Pedersen
 
 This program comes with ABSOLUTELY NO WARRANTY.  This is free
 software, and you are welcome to redistribute and/or modify
@@ -160,12 +143,23 @@ text_compare.pl - simple command-line interface to Text::Similarity
 
 =head1 SYNOPSIS
 
-text_compare.pl [[--verbose] [--stoplist=FILE] [--no-normalize] --type=TYPE | --help | --version] FILE1 FILE2
+ text_compare.pl --type Text::Similarity::Overlaps GPL.txt GPL.txt
+
+ text_compare.pl [[--verbose] [--stoplist=FILE] [--no-normalize] --type=TYPE | --help | --version] FILE1 FILE2
 
 =head1 DESCRIPTION
 
 This script is a simple command-line interface to the Text::Similarity
-set of Perl modules.
+set of Perl modules. By default it returns a normalized F-measure between 
+0 and 1 that measures the similarity of the two files that is computed 
+as follows:
+
+ precision = overlap_score / length_string_2
+ recall = overlap_score / length_string_1
+ F-measure = 2 * precision * recall / (precision + recall)
+
+In addition, this program can return the cosine, E-measure, precision, 
+and recall when used in the verbose mode. 
 
 =head1 OPTIONS
 
@@ -202,27 +196,35 @@ Show version information.
 
 =head1 AUTHORS
 
-Jason Michelizz E<lt>jmichelizzi at gmail.comE<gt>
+Ted Pedersen, University of Minnesota, Duluth
+tpederse at d.umn.edu
 
-Ted Pedersen E<lt>tpederse at d.umn.eduE<gt>
+Jason Michelizzi, Universtiy of Minnesota, Duluth 
+
+Last modified by:
+$Id: text_compare.pl,v 1.8 2008/03/20 04:45:43 tpederse Exp $
 
 =head1 BUGS
 
-Probably
+None known.
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004, Jason Michelizzi and Ted Pedersen
+Copyright (C) 2004-2008, Jason Michelizzi and Ted Pedersen
 
-This program is free software; you may redistribute and/or modify it under
-the terms of the GNU General Public License as published by the Free Software
-Foundation; either version 2 of the License, or (at your option) any later
-version.
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-This program is distributed in the hope that it will be useful, but WITHOUT
-ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
-FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more
-details.
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 =cut
 
