@@ -24,6 +24,13 @@ our @EXPORT = qw();
 
 our $VERSION = '0.03';
 
+# information about granularity is not used now
+# the would be that you could figure out similarity
+# unit by unit, that is sentence by sentence, 
+# paragraph by paragraph, etc. however, at this 
+# point similarity is only computed document by
+# document
+
 use constant WORD      => 0;
 use constant SENTENCE  => 1;
 use constant PARAGRAPH => 2;
@@ -162,36 +169,48 @@ __END__
 
 =head1 NAME
 
-Text::Similarity::Overlaps - module for computing the similarity of text
-documents using literal string (word token) overlaps
+Text::Similarity::Overlaps
 
 =head1 SYNOPSIS
 
-  # this will return an un-normalized score that just gives the
-  # number of overlaps
+	  # you may want to measure the similarity of a document
+          # sentence by sentence - the below example shows you
+	  # how - suppose you have two text files file1.txt and
+          # file2.txt - each having the same number of sentences.
+          # convert those files into multiple files, where each
+          # sentence from each file is in a separate file. 
 
-  use Text::Similarity::Overlaps;
-  my $mod = Text::Similarity::Overlaps->new;
-  defined $mod or die "Construction of Text::Similarity::Overlaps failed";
+	  # if file1.txt and file3.txt each have three sentences, 
+          # filex.txt will become sentx1.txt sentx2.txt sentx3.txt
 
-  # adjust file names to reflect true relative position
-  # these paths are valid from lib/Text/Similarity
-  my $text_file1 = '../../../t/test1.txt';
-  my $text_file2 = '../../../t/test2.txt';
+	  # this just calls getSimilarity( ) for each pair of sentences
 
-  my $score = $mod->getSimilarity ($text_file1, $text_file2);
-  print "The similarity of $text_file1 and $text_file2 is : $score\n";
+	  use Text::Similarity::Overlaps;
+	  my %options = ('normalize' => 1, 'verbose' =>1, 'stoplist' => 'stoplist.txt');
+	  my $mod = Text::Similarity::Overlaps->new (\%options);
+          defined $mod or die "Construction of Text::Similarity::Overlaps failed";
+
+	  @file1_sentences = qw / sent11.txt sent12.txt sent13.txt /;
+	  @file2_sentences = qw / sent21.txt sent22.txt sent23.txt /;
+
+          # assumes that both documents have same number of sentences 
+
+	  for ($i=0; $i <= $#file1_sentences; $i++) {
+	          my $score = $mod->getSimilarity ($file1_sentences[$i], $file2_sentences[$i]);
+        	  print "The similarity of $file1_sentences[$i] and $file2_sentences[$i] is : $score\n";
+	  }
+
+	  my $score = $mod->getSimilarity ('file1.txt', 'file2.txt');
+       	  print "The similarity of the two files is : $score\n";
+
 
 =head1 DESCRIPTION
 
 This module computes the similarity of two text documents by searching
-for literal word token overlaps in the two documents.  The score is based
-on the F-measure and ranges between 0 and 1. The F-measure is defined as 
-follows :
-
- precision = overlap_score / length_of_file_2
- recall    = overlap_score / length_of_file_1
- F-measure = 2 * precision * recall / (precision + recall)
+for literal word token overlaps. At present comparisons are made between 
+entire documents, and finer granularity is not supported. Files are 
+treated as one long input string, so overlaps can be found across 
+sentence and paragraph boundaries. 
 
 =head1 SEE ALSO
 
@@ -203,7 +222,7 @@ tpederse at d.umn.edu
 Jason Michelizzi
 
 Last modified by : 
-$Id: Overlaps.pm,v 1.11 2008/03/20 04:40:46 tpederse Exp $
+$Id: Overlaps.pm,v 1.15 2008/03/21 22:21:11 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 

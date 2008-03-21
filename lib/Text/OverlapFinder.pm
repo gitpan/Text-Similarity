@@ -11,6 +11,8 @@ use constant MARKER => '###';
 sub contains(\@@);
 sub containsReplace(\@@);
 
+## stemmer support not available as yet
+
 my %stoplist;
 my %stemmer;
 
@@ -306,7 +308,11 @@ Text::OverlapFinder - find overlaps in strings
 
 =head1 DESCRIPTION
 
-This module is useful for efficiently finding word overlaps in strings.
+This module finds word overlaps in strings. It finds the longest 
+possible overlap, and keeps track of how many time each overlap occurs.
+
+There is a mechanism available for a user to provide a stemming module, 
+but no stemmer is provided by this package as yet. 
 
 =head1 AUTHORS
 
@@ -322,7 +328,7 @@ banerjee at cs.cmu.edu
 Jason Michelizzi 
 
 Last modified by:
-$Id: OverlapFinder.pm,v 1.8 2008/03/20 04:31:34 tpederse Exp $
+$Id: OverlapFinder.pm,v 1.9 2008/03/21 17:14:04 tpederse Exp $
 
 =head1 BUGS
 

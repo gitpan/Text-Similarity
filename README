@@ -1,27 +1,35 @@
 NAME
-    Text-Similarity version 0.03
+    Text-Similarity version 0.04
 
 DESCRIPTION
     Text-Similarity is a Perl module that allows a user to measure the
-    similarity between two files. Similarity is based on counting the number
-    of overlapping words between the two files, and is normalized by the
-    length of the files.
+    similarity between two files. There is just one method for computing
+    similarity supported now, Text::Similarity::Overlaps, although others
+    can be added.
 
-    Pleased note that the smallest unit we are considered for matches are
-    white space separated strings.
+    When using Text::Similarity::Overlaps, text similarity is based on
+    counting the number of overlapping words between the two files, and is
+    (optionally) normalized by the length of the files.
 
-    'The cat and the hat' and 'These cats and these hats' will only result
-    in similarity between 'and', matches below the word level are not
-    measured.
+    The smallest unit we are considered for matches are white space
+    separated strings. 'the cat and the hat' and 'these cats and these hats'
+    will only result in similarity between 'and', matches below the word
+    level are not measured.
+
+    Each input file is treated as a single string. There are methods
+    provided that allow you to write programs that measure files for
+    similarity (getSimilarity) and identifying the overlaps present in
+    strings (getOverlaps).
 
 CONTENTS
     When the distribution is unpacked, several subdirectories are created:
 
     /bin
         This directory contains a driver program called text_compare.pl that
-        can be used to conveniently measure two files for similarity.
+        can be used to conveniently measure two files for similarity. Please
+        see the perldoc for this program for more details.
 
-        Please see the perldoc for this program for more details.
+        It also includes a copy of the SMART stop list (stoplist.txt)
 
     /lib
         This directory contains the Perl modules that do the actual work of
@@ -40,7 +48,7 @@ CONTENTS
         execute 'make test'.
 
 SEE ALSO
-    <http://text-similarity.sourceforge.net>
+    <http://www.d.umn.edu/~tpederse/text-similarity.html>
 
 AUTHORS
     Ted Pedersen, University of Minnesota, Duluth tpederse at d.umn.edu
@@ -51,7 +59,7 @@ AUTHORS
 
     Jason Michelizzi
 
-    Last modified by: $Id: README.pod,v 1.7 2008/03/20 03:07:58 tpederse Exp
+    Last modified by: $Id: README.pod,v 1.8 2008/03/21 19:00:23 tpederse Exp
     $
 
 COPYRIGHT AND LICENSE

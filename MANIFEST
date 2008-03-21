@@ -1,3 +1,4 @@
+bin/stoplist.txt
 bin/text_compare.pl
 CHANGES
 doc/CHANGES.pod
@@ -13,5 +14,12 @@ lib/Text/Similarity/Overlaps.pm
 Makefile.PL
 MANIFEST			This list of files
 README
-t/Text-Similarity.t
+t/file1.txt
+t/file11.txt
+t/file2.txt
+t/file22.txt
+t/no-normalize.t
+t/normalize.t
+t/overlaps.t
+t/text_compare.t
 META.yml                                 Module meta-data (added by MakeMaker)

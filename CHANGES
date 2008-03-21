@@ -5,38 +5,73 @@ SYNOPSIS
     Revision history for Perl module Text::Similarity
 
 DESCRIPTION
-    0.03
-        Released March 20, 2008 all changes by TDP
+    0.04
+    Released March 21, 2008 (all changes by TDP)
 
-        fix divide by zero errors reported on cpan by cernst at esoft.com,
+    *   Introduced tests for text_compare.pl (t/text_compare.t) - added
+        support for os neutral file reads via FILE::SPEC in this and other
+        .t files.
+
+    *   Introduced tests for getOverlaps (t/overlaps.t)
+
+    *   Improved synopsis examples to show how to pass options via arguments
+        in hashes
+
+    *   Clarified that stemming and compounding are not currently supported
+        disabled compfile option in text_compare.pl
+
+    *   Made file handling in text_compare more robust so that when a file
+        does not exist an error message is given and failure is immediate
+
+    *   Changed method of passing constants in test cases from (eg.)
+        "Text::Similarity::NORMALIZE" to "normalize" in order to support
+        backwards compatability with perl 5.6.
+
+    *   Introduce normalize and no-normalize tests for getSimilarity
+
+    *   Fix Similarity.pm Synopsis example not to use files in /t that are
+        no longer available
+
+    0.03
+    Released March 20, 2008 (all changes by TDP)
+
+    *   fix divide by zero errors reported on cpan by cernst at esoft.com,
         who also provided fix
-        update test cases to improve coverage of partial matches and no
+
+    *   update test cases to improve coverage of partial matches and no
         matches
-        update synopsis examples so they can be run via cut and paste
-        improve README content to make it more descriptive
-        introduce /doc directory for pod of INSTALL README and CHANGES
-        introduce 'use constant' to support perl 5.6
+
+    *   update synopsis examples so they can be run via cut and paste
+
+    *   improve README content to make it more descriptive
+
+    *   introduce /doc directory for pod of INSTALL README and CHANGES
+
+    *   introduce 'use constant' to support perl 5.6
 
     0.02
-        Released October 16, 2004, all changes by JM
+    Released October 16, 2004, all changes by JM
 
-        fixed overlap finding & added new module Text::OverlapFinder
-        improved command-line interface
-        improved documentation and help messages
-        added support for a stoplist
+    *   fixed overlap finding & added new module Text::OverlapFinder
+
+    *   improved command-line interface
+
+    *   improved documentation and help messages
+
+    *   added support for a stoplist
 
     0.01
-        Released September 23, 2004, all changes by JM
+    Released September 23, 2004, all changes by JM
 
-        original version; created by h2xs 1.23 with options -b 5.6.0 -A -X
+    *   original version; created by h2xs 1.23 with options -b 5.6.0 -A -X
         Text::Similarity
 
 AUTHORS
      Ted Pedersen, University of Minnesota, Duluth
      tpederse at d.umn.edu
 
-    This document last modified by : $Id: CHANGES.pod,v 1.4 2008/03/20
-    02:43:29 tpederse Exp $
+    This document last modified by : $Id: CHANGES.pod,v 1.9 2008/03/21
+    22:26:34 tpederse Exp $
 
 SEE ALSO
 COPYRIGHT AND LICENSE

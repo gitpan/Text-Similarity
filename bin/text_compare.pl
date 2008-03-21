@@ -9,28 +9,45 @@ use Getopt::Long;
 
 sub formatNumber($);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
-our ($verbose, $stem, $compfile, $type, $stoplist, $help, $version);
+## these are current command line options
+
+our ($verbose, $stem, $type, $stoplist, $help, $version);
+
+## compfile (compound file) not working, causes hang
+## our ($verbose, $stem, $compfile, $type, $stoplist, $help, $version);
+
+## normalize scores unless directed to otherwise (via --no-normalize)
 
 our $normalize = 1;
 
-my $result = GetOptions (verbose => \$verbose, stem => \$stem,
-			 "compfile=s" => \$compfile,
+## this will enable any of the options set on the command line
+## if invalid or nonexistant options are given then we quit here
+
+my $result = GetOptions (verbose => \$verbose, 
+			 stem => \$stem,
+##
+## compfile option is not working, so don't enable
+##			 "compfile=s" => \$compfile, 
+##
 			 "stoplist=s" => \$stoplist,
 			 "type=s" => \$type,
+##
+## normalize! means that it is negatatable, so you can specify
+## --no-normalize to turn it off
+##
 			 "normalize!" => \$normalize,
 			 version => \$version,
 			 help => \$help
 			 );
-
 $result or exit 1;
 
-if ($help) {
+if (defined $help) {
     showUsage(detailed => 1);
     exit;
 }
-elsif ($version) {
+elsif (defined $version) {
     print <<"EOT";
 text_compare.pl version ${VERSION}
 Copyright (C) 2004-2008, Jason Michelizzi and Ted Pedersen
@@ -48,26 +65,51 @@ elsif (!defined $type) {
     exit;
 }
 
+## this style of reference to a constant is not suported
+## in perl 5.6, however, will work in 5.8 and better
+
+#my %opt_hash = (
+#		Text::Similarity::STEM => $stem,
+#		Text::Similarity::VERBOSE => $verbose,
+#		Text::Similarity::COMPFILE => $compfile,
+#		Text::Similarity::STOPLIST => $stoplist,
+#		Text::Similarity::NORMALIZE => $normalize
+#		);
+
 my %opt_hash = (
-		Text::Similarity::STEM => $stem,
-		Text::Similarity::VERBOSE => $verbose,
-		Text::Similarity::COMPFILE => $compfile,
-		Text::Similarity::STOPLIST => $stoplist,
-		Text::Similarity::NORMALIZE => $normalize
+		'stem' => $stem,
+		'verbose' => $verbose,
+		'stoplist' => $stoplist,
+		'normalize' => $normalize
 		);
+## not working  'compfile' => $compfile,
 
 my $file1 = shift;
 my $file2 = shift;
+
 unless (defined $file1 && defined $file2) {
     showUsage();
     exit 1;
+}
+
+# check to see that files truly exist
+
+if (!-e $file1) {
+	print STDERR "ERROR($0): 
+	FILE1 ($file1) does not exist\n";
+	exit;
+}
+
+if (!-e $file2) {
+	print STDERR "ERROR($0): 
+	FILE2 ($file2) does not exist\n";
+	exit;
 }
 
 eval "require $type";
 if ($@) {die $@}
 
 my $mod = $type->new (\%opt_hash);
-
 
 my $score = $mod->getSimilarity ($file1, $file2);
 
@@ -125,7 +167,9 @@ EOT
 --type=TYPE       The type of measure you want to use.  Possible measures:
                       Text::Similarity::Overlaps
 --verbose         Show verbose output
---stoplist=FILE   The name of a file containing stop words.
+--stoplist=FILE   A plain text file that specifies words that should be 
+		  ignored in calculating similarity. Specify one word per
+                  line, avoid extra spaces after words.
 --no-normalize    Do not normalize scores.  Normally, scores are normalized
                   so that they range from 0 to 1.  Using this option will
 		  give you a raw score instead.
@@ -143,23 +187,40 @@ text_compare.pl - simple command-line interface to Text::Similarity
 
 =head1 SYNOPSIS
 
- text_compare.pl --type Text::Similarity::Overlaps GPL.txt GPL.txt
+ text_compare.pl --type Text::Similarity::Overlaps ../GPL.txt ../FDL.txt
+
+ text_compare.pl --verbose --type Text::Similarity::Overlaps ../GPL.txt ../FDL.txt 
+
+ text_compare.pl --verbose --stoplist stoplist.txt --type Text::Similarity::Overlaps ../GPL.txt ../FDL.txt 
 
  text_compare.pl [[--verbose] [--stoplist=FILE] [--no-normalize] --type=TYPE | --help | --version] FILE1 FILE2
 
 =head1 DESCRIPTION
 
 This script is a simple command-line interface to the Text::Similarity
-set of Perl modules. By default it returns a normalized F-measure between 
-0 and 1 that measures the similarity of the two files that is computed 
-as follows:
+Perl modules. At present only one method of computing similarity is 
+provided, Text::Similarity::Overlaps. However, additional methods can be 
+added. The output described below for this program comes from 
+Text::Similarity::Overlaps, but could vary in future as additional 
+similarity measurement methods are added. 
 
- precision = overlap_score / length_string_2
- recall = overlap_score / length_string_1
+By default Text::Similarity::Overlaps returns a normalized F-measure 
+between 0 and 1. Normalization can be turned off by specifying 
+--no-normalize.
+
+In addition, it can return the cosine, E-measure, precision, and recall 
+when used in the verbose mode (specify --verbose in the command line). 
+
+ precision = raw_score / length_file_2
+ recall = raw_score / length_file_1
  F-measure = 2 * precision * recall / (precision + recall)
+ E-measure = 1 - F-measure
+ cosine = raw_score / sqrt (precision + recall) 
 
-In addition, this program can return the cosine, E-measure, precision, 
-and recall when used in the verbose mode. 
+Files are treated as one long line of text. There is some cleaning of 
+text performed automatically, which includes removal of most punctuation 
+except embedded apostrophies and underscores. All text is made lower 
+case. 
 
 =head1 OPTIONS
 
@@ -173,7 +234,7 @@ The type of text similarity measure.  Valid values include:
 
 =item B<--stoplist>=I<FILE>
 
-The name of a file containing stop words (one word per line).
+The name of a file containing stop words (one word per line). 
 
 =item B<--no-normalize>
 
@@ -182,7 +243,8 @@ from 0 to 1.  Using this option will give you a raw score instead.
 
 =item B<--verbose>
 
-Be verbose.
+Show all the matches that are found between the files, their length and 
+frequency, as well as precision, recall, F-measure, E-measure, and cosine.
 
 =item B<--help>
 
@@ -199,14 +261,18 @@ Show version information.
 Ted Pedersen, University of Minnesota, Duluth
 tpederse at d.umn.edu
 
-Jason Michelizzi, Universtiy of Minnesota, Duluth 
+Jason Michelizzi
 
 Last modified by:
-$Id: text_compare.pl,v 1.8 2008/03/20 04:45:43 tpederse Exp $
+$Id: text_compare.pl,v 1.13 2008/03/21 23:01:49 tpederse Exp $
 
 =head1 BUGS
 
-None known.
+=over
+
+=item --compfile is not working, seems to cause hang (tdp 3/21/08)
+
+=back
 
 =head1 COPYRIGHT AND LICENSE
 

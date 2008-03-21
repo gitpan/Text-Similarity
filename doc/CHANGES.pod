@@ -8,30 +8,81 @@ Revision history for Perl module Text::Similarity
 
 =head1 DESCRIPTION
 
-=over
+=item 0.04
 
-=item 0.03 
-
-Released March 20, 2008 all changes by TDP
+Released March 21, 2008 (all changes by TDP)
 
 =over
 
 =item 
+
+Introduced tests for text_compare.pl (t/text_compare.t) - added support 
+for os neutral file reads via FILE::SPEC in this and other .t files.
+
+=item
+
+Introduced tests for getOverlaps (t/overlaps.t)
+
+=item
+
+Improved synopsis examples to show how to pass options via arguments in 
+hashes
+
+=item
+
+Clarified that stemming and compounding are not currently supported
+disabled compfile option in text_compare.pl
+
+=item
+
+Made file handling in text_compare more robust so that when a file does 
+not exist an error message is given and failure is immediate
+
+=item
+
+Changed method of passing constants in test cases from (eg.)
+"Text::Similarity::NORMALIZE" to "normalize" in order to support 
+backwards compatability with perl 5.6.
+
+=item 
+
+Introduce normalize and no-normalize tests for getSimilarity
+
+=item
+
+Fix Similarity.pm Synopsis example not to use files in /t that are no 
+longer available
+
+=back
+
+=item 0.03 
+
+Released March 20, 2008 (all changes by TDP)
+
+=over
+
+=item 
+
 fix divide by zero errors reported on cpan by cernst at esoft.com, who also provided fix
 
 =item
+
 update test cases to improve coverage of partial matches and no matches
 
 =item
+
 update synopsis examples so they can be run via cut and paste
 
 =item
+
 improve README content to make it more descriptive
 
 =item
+
 introduce /doc directory for pod of INSTALL README and CHANGES
 
 =item
+
 introduce 'use constant' to support perl 5.6
 
 =back
@@ -43,15 +94,19 @@ Released October 16, 2004, all changes by JM
 =over
 
 =item 
+
 fixed overlap finding & added new module Text::OverlapFinder
 
 =item 
+
 improved command-line interface
 
 =item 
+
 improved documentation and help messages
 
 =item 
+
 added support for a stoplist
 
 =back
@@ -62,10 +117,9 @@ Released September 23, 2004, all changes by JM
 
 =over
 
-=item original version; created by h2xs 1.23 with options
-		-b 5.6.0 -A -X Text::Similarity
+=item 
 
-=back
+original version; created by h2xs 1.23 with options -b 5.6.0 -A -X Text::Similarity
 
 =back
 
@@ -75,7 +129,7 @@ Released September 23, 2004, all changes by JM
  tpederse at d.umn.edu
 
 This document last modified by :
-$Id: CHANGES.pod,v 1.5 2008/03/20 04:49:19 tpederse Exp $
+$Id: CHANGES.pod,v 1.9 2008/03/21 22:26:34 tpederse Exp $
 
 =head1 SEE ALSO
 

@@ -1,7 +1,7 @@
 --- #YAML:1.0
 name:                Text-Similarity
-version:             0.03
-abstract:            module for measuring the similarity of text documents.
+version:             0.04
+abstract:            measuring the pair-wise similarity of documents.
 license:             gpl
 author:              
     - Ted Pedersen <tpederse at d.umn.edu>

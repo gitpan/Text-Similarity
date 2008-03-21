@@ -1,16 +1,27 @@
 # Before `make install' is performed this script should be runnable with
-# `make test'. After `make install' it should work as `perl Text-Similarity.t'
-# Last modified by : $Id: Text-Similarity.t,v 1.7 2008/03/20 03:05:47 tpederse Exp $
+# `make test'. After `make install' it should work as `perl no-normalize.t'
+# Note that because of the file paths used this must be run from the
+# directory in which /t resides
+#
+# Last modified by : $Id: no-normalize.t,v 1.5 2008/03/21 22:24:36 tpederse Exp $
 #########################
 
 # change 'tests => 1' to 'tests => last_test_to_print';
 
-use Test::More tests => 19;
+use Test::More tests => 27;
 
 BEGIN {use_ok Text::Similarity}
 BEGIN {use_ok Text::Similarity::Overlaps}
 
-my %opt_hash = (Text::Similarity::NORMALIZE => 1);
+#
+# Turn off normalization for these tests
+#
+
+# constant passing method not supported in version 5.6
+# my %opt_hash = (Text::Similarity::NORMALIZE => 0);
+
+my %opt_hash = ('normalize' => 0);
+
 my $overlapmod = Text::Similarity::Overlaps->new (\%opt_hash);
 ok ($overlapmod);
 
@@ -46,10 +57,10 @@ close FH4;
 
 # exact matching between two identical files
 $score = $overlapmod->getSimilarity ($tempfile1, $tempfile1);
-is ($score, 1, "self similarity of tempfile1");
+is ($score, 8, "self similarity of tempfile1");
 
 $score = $overlapmod->getSimilarity ($tempfile2,$tempfile2);
-is ($score, 1, "self similarity of tempfile2");
+is ($score, 4, "self similarity of tempfile2");
 
 # self similarity of an empty file? call it 0 since nothing matches
 
@@ -59,7 +70,7 @@ is ($score, 0, "self similarity of tempfile0");
 # exact matching between two files that only differ with white space
 
 $score = $overlapmod->getSimilarity ($tempfile2, $tempfile3);
-is ($score, 1, "similarity of tempfile2 and tempfile3");
+is ($score, 4, "similarity of tempfile2 and tempfile3");
 
 # no match to an empty file (text0.txt)
 # caused divide by zero error in 0.02
@@ -70,16 +81,57 @@ is ($score, 0, "similarity of tempfile2 and tempfile0");
 $score = $overlapmod->getSimilarity ($tempfile0, $tempfile1);
 is ($score, 0, "similarity of tempfile0 and tempfile1");
 
-# partial match, above .5 score
+# partial match, 4 words
 
 $score = $overlapmod->getSimilarity ($tempfile1, $tempfile2);
-cmp_ok ($score, '<', 1);
-cmp_ok ($score, '>', .5);
+is ($score, 4, "similarity of tempfile1 and tempfile2");
 
-# incidental match, small nonzero score
+# incidental match, 1 word
 
 $score = $overlapmod->getSimilarity ($tempfile1, $tempfile4);
-cmp_ok ($score, '<', .5);
-cmp_ok ($score, '>', 0);
+is ($score, 1, "similarity of tempfile1 and tempfile4");
 
 END {ok (unlink ($tempfile0, $tempfile1, $tempfile2, $tempfile3, $tempfile4))}
+
+#
+# now test with existing files
+#
+
+# set up file access in an OS neutral way
+use File::Spec;
+
+my $file1_txt = File::Spec->catfile ('t','file1.txt');
+ok (-e $file1_txt);
+
+my $file11_txt = File::Spec->catfile ('t','file11.txt');
+ok (-e $file11_txt);
+
+my $file2_txt = File::Spec->catfile ('t','file2.txt');
+ok (-e $file2_txt);
+
+my $file22_txt = File::Spec->catfile ('t','file22.txt');
+ok (-e $file22_txt);
+
+# self similarity
+
+$score = $overlapmod->getSimilarity ($file1_txt, $file1_txt);
+is ($score, 80, "self similarity file 1");
+
+$score = $overlapmod->getSimilarity ($file2_txt, $file2_txt);
+is ($score, 78, "self similarity file 2");
+
+$score = $overlapmod->getSimilarity ($file11_txt, $file11_txt);
+is ($score, 80, "self similarity file 11");
+
+$score = $overlapmod->getSimilarity ($file22_txt, $file22_txt);
+is ($score, 78, "self similarity file 22");
+
+# file11 is single line version of file1
+# file22 is single line version of file2
+
+$score = $overlapmod->getSimilarity ($file1_txt, $file11_txt);
+is ($score, 80, "self similarity file 1 and 11");
+
+$score = $overlapmod->getSimilarity ($file2_txt, $file22_txt);
+is ($score, 78, "self similarity file 2 and 22");
+

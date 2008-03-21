@@ -14,7 +14,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 # Attributes -- these all have lvalue accessor methods, use those methods
 # instead of accessing directly.  If you add another attribute, be sure
@@ -38,7 +38,7 @@ sub new
     if (defined $hash_ref) {
 	while (my ($key, $val) = each %$hash_ref) {
 	    if (($key eq COMPFILE) and (defined $val)) {
-		$self->loadCompounds ($val);
+		$self->_loadCompounds ($val);
 	    }
 	    elsif ($key eq STEM) {
 		$self->stem = $val;
@@ -184,6 +184,7 @@ sub removeStopWords
 # e.g., if you give it "we have a new bird dog", you'll get back
 # "we have a new bird_dog".
 # (code borrowed from rawtextFreq.pl)
+
 sub compoundify
 {
     my $self = shift;
@@ -238,30 +239,67 @@ __END__
 
 =head1 NAME
 
-Text::Similarity - module for measuring the similarity of text documents.
-This module is a superclass for other modules.
+Text::Similarity - measuring the pair-wise similarity of documents.
 
 =head1 SYNOPSIS
- 
-  # this will return an un-normalized score that just gives the 
-  # number of overlaps - this is same synopsis as in Text/Overlaps.pm
 
-  use Text::Similarity::Overlaps;
-  my $mod = Text::Similarity::Overlaps->new;
-  defined $mod or die "Construction of Text::Similarity::Overlaps failed";
-  
-  # adjust file names to reflect true relative position
-  # these paths are valid from lib/Text/
-  my $text_file1 = '../../t/test1.txt';
-  my $text_file2 = '../../t/test2.txt';
+      # this will return an un-normalized score that just gives the
+      # number of overlaps
 
-  my $score = $mod->getSimilarity ($text_file1, $text_file2);
-  print "The similarity of $text_file1 and $text_file2 is : $score\n";
+      use Text::Similarity::Overlaps;
+      my $mod = Text::Similarity::Overlaps->new;
+      defined $mod or die "Construction of Text::Similarity::Overlaps failed";
+
+      # adjust file names to reflect true relative position
+      # these paths are valid from lib/Text/Similarity
+      my $text_file1 = 'Overlaps.pm';
+      my $text_file2 = '../OverlapFinder.pm';
+
+      my $score = $mod->getSimilarity ($text_file1, $text_file2);
+      print "The similarity of $text_file1 and $text_file2 is : $score\n";
+
+      # if you want to turn on the verbose option and provide a stoplist
+      # you can pass those parameters to Overlaps.pm via hash arguments
+
+      use Text::Similarity::Overlaps;
+      my %options = ('verbose' => 1, 'stoplist' => '../../bin/stoplist.txt');
+
+      my $mod = Text::Similarity::Overlaps->new (\%options);
+      defined $mod or die "Construction of Text::Similarity::Overlaps failed";
+
+      # adjust file names to reflect true relative position
+      # these paths are valid from lib/Text/Similarity
+      my $text_file1 = 'Overlaps.pm';
+      my $text_file2 = '../OverlapFinder.pm';
+
+      my $score = $mod->getSimilarity ($text_file1, $text_file2);
+      print "The similarity of $text_file1 and $text_file2 is : $score\n";
 
 =head1 DESCRIPTION
 
-This module serves as a superclass for other modules that implement measures
-of text document similarity.
+This module is a superclass for other modules and provides generic 
+services such as stop word removal, compound identification, and text 
+cleaning or sanitizing. 
+
+It's important to realize that additional methods of measuring 
+similarity can be added to this package. Text::Similarity::Overlaps is 
+just one possible way of measuring similarity, others can be added. 
+
+Subroutine sanitizeString carries out text cleaning. Briefly, it removes 
+nearly all punctuation except for underscores and embedded apostrophes, 
+converts all text to lower case, and collapes multiple white spaces to 
+a single space. 
+
+This module is where compounds are identified (although currently 
+disabled). When implemented it will check a list of compounds provided 
+by the user, and then when a compound is found in the text it will be 
+desigated via an underscore (e.g., white house might be converted to 
+white_house).
+
+Stop words are removed here. The length of the documents reported does 
+not include the stop words. Overlaps are found after stopword removal. 
+By including a word in the stoplist, you are saying that the word never 
+existed in your input (in effect).
 
 =head1 SEE ALSO
 
@@ -276,12 +314,12 @@ sidd at cs.utah.edu
 Jason Michelizzi
 
 Last modified by :
-$Id: Similarity.pm,v 1.10 2008/03/20 01:41:44 tpederse Exp $
+$Id: Similarity.pm,v 1.17 2008/03/21 23:01:49 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 
 Text::Similarity
-Copyright (C) 2004-2008, Ted Pdersen, Jason Michelizzi, and Siddharth 
+Copyright (C) 2004-2008, Ted Pedersen, Jason Michelizzi, and Siddharth 
 Patwardhan
 
 This program is free software; you can redistribute it and/or modify
