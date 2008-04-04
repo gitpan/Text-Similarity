@@ -281,7 +281,7 @@ __END__
 
 =head1 NAME
 
-Text::OverlapFinder - find overlaps in strings
+Text::OverlapFinder - Find Overlapping Words in Strings
 
 =head1 SYNOPSIS
  
@@ -316,23 +316,19 @@ but no stemmer is provided by this package as yet.
 
 =head1 AUTHORS
 
-Ted Pedersen, University of Minnesota, Duluth
-tpederse at d.umn.edu
+ Ted Pedersen, University of Minnesota, Duluth
+ tpederse at d.umn.edu
 
-Siddharth Patwardhan 
-sidd at cs.utah.edu
+ Siddharth Patwardhan, University of Utah
+ sidd at cs.utah.edu
 
-Satanjeev Banerjee
-banerjee at cs.cmu.edu
+ Satanjeev Banerjee, Carnegie-Mellon University
+ banerjee at cs.cmu.edu
 
-Jason Michelizzi 
+ Jason Michelizzi 
 
 Last modified by:
-$Id: OverlapFinder.pm,v 1.9 2008/03/21 17:14:04 tpederse Exp $
-
-=head1 BUGS
-
-None known.
+$Id: OverlapFinder.pm,v 1.11 2008/04/04 17:28:36 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 

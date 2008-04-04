@@ -18,8 +18,10 @@ t/file1.txt
 t/file11.txt
 t/file2.txt
 t/file22.txt
+t/getsimilaritystrings.t
 t/no-normalize.t
 t/normalize.t
 t/overlaps.t
 t/text_compare.t
+t/text_compare_string.t
 META.yml                                 Module meta-data (added by MakeMaker)

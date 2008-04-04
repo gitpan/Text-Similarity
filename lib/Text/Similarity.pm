@@ -14,7 +14,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 # Attributes -- these all have lvalue accessor methods, use those methods
 # instead of accessing directly.  If you add another attribute, be sure
@@ -239,7 +239,7 @@ __END__
 
 =head1 NAME
 
-Text::Similarity - measuring the pair-wise similarity of documents.
+Text::Similarity - Measure the pair-wise similarity of documents and strings.
 
 =head1 SYNOPSIS
 
@@ -301,24 +301,32 @@ not include the stop words. Overlaps are found after stopword removal.
 By including a word in the stoplist, you are saying that the word never 
 existed in your input (in effect).
 
+=head1 BUGS
+
+=over
+=item * Compoundify and stemming currently not supported.
+=item * Granularity option in getSimilarity not supported.
+=back
+
 =head1 SEE ALSO
 
-=head1 AUTHOR
+ L<http://text-similarity.sourceforge.net> 
 
-Ted Pedersen, University of Minnesota, Duluth
-tpederse at d.umn.edu
+=head1 AUTHORS
 
-Siddharth Patwardhan
-sidd at cs.utah.edu
+ Ted Pedersen, University of Minnesota, Duluth
+ tpederse at d.umn.edu
 
-Jason Michelizzi
+ Siddharth Patwardhan, University of Utah
+ sidd at cs.utah.edu
+
+ Jason Michelizzi
 
 Last modified by :
-$Id: Similarity.pm,v 1.17 2008/03/21 23:01:49 tpederse Exp $
+$Id: Similarity.pm,v 1.19 2008/04/04 17:28:36 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 
-Text::Similarity
 Copyright (C) 2004-2008, Ted Pedersen, Jason Michelizzi, and Siddharth 
 Patwardhan
 

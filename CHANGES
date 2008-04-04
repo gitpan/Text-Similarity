@@ -1,10 +1,15 @@
 NAME
-    CHANGES.pod
-
-SYNOPSIS
-    Revision history for Perl module Text::Similarity
+    CHANGES - Revision history for Text::Similarity
 
 DESCRIPTION
+    0.05
+    Released April 4, 2008 (all changes by TDP)
+
+    *   Made it possible for users to input strings directly via
+        text_compare.pl and getSimilarityStrings. Previously it was only
+        possible to directly measure the similarity of files, but now
+        strings can be measured.
+
     0.04
     Released March 21, 2008 (all changes by TDP)
 
@@ -70,8 +75,8 @@ AUTHORS
      Ted Pedersen, University of Minnesota, Duluth
      tpederse at d.umn.edu
 
-    This document last modified by : $Id: CHANGES.pod,v 1.9 2008/03/21
-    22:26:34 tpederse Exp $
+    This document last modified by : $Id: CHANGES.pod,v 1.10 2008/04/04
+    17:28:35 tpederse Exp $
 
 SEE ALSO
 COPYRIGHT AND LICENSE

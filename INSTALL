@@ -1,5 +1,5 @@
 NAME
-    INSTALL - installation instructions for Text-Similarity
+    INSTALL - Installation instructions for Text::Similarity
 
 SYNOPSIS
         perl Makefile.PL
@@ -51,8 +51,8 @@ AUTHOR
      Ted Pedersen, University of Minnesota, Duluth
      tpederse at d.umn.edu
 
-    This document last modified by : $Id: INSTALL.pod,v 1.1 2008/03/19
-    23:23:30 tpederse Exp $
+    This document last modified by : $Id: INSTALL.pod,v 1.2 2008/04/04
+    17:28:35 tpederse Exp $
 
 SEE ALSO
 COPYRIGHT AND LICENSE

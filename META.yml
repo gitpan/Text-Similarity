@@ -1,7 +1,7 @@
 --- #YAML:1.0
 name:                Text-Similarity
-version:             0.04
-abstract:            measuring the pair-wise similarity of documents.
+version:             0.05
+abstract:            Measure the pair-wise similarity of documents and strings.
 license:             gpl
 author:              
     - Ted Pedersen <tpederse at d.umn.edu>

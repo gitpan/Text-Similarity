@@ -1,12 +1,22 @@
 =head1 NAME
 
-CHANGES.pod
-
-=head1 SYNOPSIS
-
-Revision history for Perl module Text::Similarity
+CHANGES - Revision history for Text::Similarity
 
 =head1 DESCRIPTION
+
+=item 0.05
+
+Released April 4, 2008 (all changes by TDP)
+
+=over
+
+=item 
+
+Made it possible for users to input strings directly via text_compare.pl and
+getSimilarityStrings. Previously it was only possible to directly measure the 
+similarity of files, but now strings can be measured. 
+
+=back
 
 =item 0.04
 
@@ -129,7 +139,7 @@ original version; created by h2xs 1.23 with options -b 5.6.0 -A -X Text::Similar
  tpederse at d.umn.edu
 
 This document last modified by :
-$Id: CHANGES.pod,v 1.9 2008/03/21 22:26:34 tpederse Exp $
+$Id: CHANGES.pod,v 1.10 2008/04/04 17:28:35 tpederse Exp $
 
 =head1 SEE ALSO
 

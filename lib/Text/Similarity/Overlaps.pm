@@ -22,7 +22,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = '0.03';
+our $VERSION = '0.04';
 
 # information about granularity is not used now
 # the would be that you could figure out similarity
@@ -66,11 +66,28 @@ sub DESTROY
     delete $finder{$self};
 }
 
+# this method requires that the input be provided in files. 
+# this is now just a front end to getSimilarityStrings that 
+# does file handling. Actual similarity measuresments are
+# performed between strings in getSimilarityStrings.
+
 sub getSimilarity
 {
     my $self = shift;
+
+    # we created a separate method for getSimilarityStrings since overloading 
+    # to accept both strings and file names as input parameters to 
+    # getSimilarity would have required that we treat any file name that does
+    # not have a corresponding file to be treated as a string, thus making it
+    # impossible to really deal with missing file errors, and probably resulting
+    # in quite a bit of user annoyance as 'textt1.txt' is measured for similarity
+    # with the contents of 'text2.txt'
+
     my $file1 = shift;
     my $file2 = shift;
+
+    # granularity is not currently supported
+
     my $granularity = shift;
     $granularity = DOCUMENT unless defined $granularity;
 
@@ -92,7 +109,6 @@ sub getSimilarity
 	return undef;
     }
     
-
     my $str1;
     my $str2;
     while (<FH1>) {
@@ -109,6 +125,45 @@ sub getSimilarity
 
     close FH1;
     close FH2;
+
+# add this call, to expose this method to users too (in case they want to
+# just measure the similarity of two strings. So we have our files converted
+# into strings, and now measure their similarity.
+
+    my $score = $self -> getSimilarityStrings ($str1,$str2);
+
+# end getSimilarity here, making sure to return similarity value from 
+# get SimilarityStrings
+
+    return $score;
+
+}
+
+# this method measures the similarity between two strings. If a string is empty
+# or missing then we throw an exception
+
+sub getSimilarityStrings {
+
+    my $self = shift;
+
+    my $input1 = shift;
+    my $input2 = shift;
+
+# check to make sure you have a string! empty file or string should be rejected
+
+    if (!defined($input1)) {
+	    $self->error ("first input string is undefined: $!");
+	    return undef;
+    }
+    if (!defined($input2)) {
+	    $self->error ("second input string is undefined: $!");
+	    return undef;
+    }
+
+    # clean the strings
+
+    my $str1 .= $self->sanitizeString ($input1);
+    my $str2 .= $self->sanitizeString ($input2);
 
     my ($overlaps, $wc1, $wc2) = $self->finder->getOverlaps ($str1, $str2);
     my $score = 0;
@@ -169,9 +224,27 @@ __END__
 
 =head1 NAME
 
-Text::Similarity::Overlaps
+Text::Similarity::Overlaps - Score the Matches Found Between Two Strings
 
 =head1 SYNOPSIS
+
+          # you can measure the similarity between two input strings
+	  # if you don't normalize the score, you get the number of matching words
+          # if you normalize, you get a score between 0 and 1 that is scaled based
+	  # on the length of the strings
+
+	  use Text::Similarity::Overlaps;
+ 
+	  # my %options = ('normalize' => 1, 'verbose' => 1);
+	  my %options = ('normalize' => 0, 'verbose' => 0);
+	  my $mod = Text::Similarity::Overlaps->new (\%options);
+          defined $mod or die "Construction of Text::Similarity::Overlaps failed";
+
+          my $string1 = 'this is a test for getSimilarityStrings';
+          my $string2 = 'we can test getSimilarityStrings this day';
+
+	  my $score = $mod->getSimilarityStrings ($string1, $string2);
+       	  print "The number of matching words between string1 and string2 is : $score\n";
 
 	  # you may want to measure the similarity of a document
           # sentence by sentence - the below example shows you
@@ -203,26 +276,29 @@ Text::Similarity::Overlaps
 	  my $score = $mod->getSimilarity ('file1.txt', 'file2.txt');
        	  print "The similarity of the two files is : $score\n";
 
-
 =head1 DESCRIPTION
 
-This module computes the similarity of two text documents by searching
-for literal word token overlaps. At present comparisons are made between 
-entire documents, and finer granularity is not supported. Files are 
-treated as one long input string, so overlaps can be found across 
-sentence and paragraph boundaries. 
+This module computes the similarity of two text documents or strings by searching for 
+literal word token overlaps. At present comparisons are made between  entire documents, 
+and finer granularity is not supported. Files are treated as one long input string, so 
+overlaps can be found across sentence and paragraph boundaries. 
+
+Files are first converted into strings by getSimilarity(), then getSimilarityStrings()  
+does the actual processing. 
 
 =head1 SEE ALSO
 
+ L<http://text-similarity.sourceforge.net>
+
 =head1 AUTHOR
 
-Ted Pedersen, University of Minnesota, Duluth
-tpederse at d.umn.edu
+ Ted Pedersen, University of Minnesota, Duluth
+ tpederse at d.umn.edu
 
-Jason Michelizzi
+ Jason Michelizzi
 
 Last modified by : 
-$Id: Overlaps.pm,v 1.15 2008/03/21 22:21:11 tpederse Exp $
+$Id: Overlaps.pm,v 1.18 2008/04/04 18:30:19 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 
