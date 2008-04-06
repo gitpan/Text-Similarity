@@ -14,7 +14,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.05';
+our $VERSION = '0.06';
 
 # Attributes -- these all have lvalue accessor methods, use those methods
 # instead of accessing directly.  If you add another attribute, be sure
@@ -239,7 +239,7 @@ __END__
 
 =head1 NAME
 
-Text::Similarity - Measure the pair-wise similarity of documents and strings.
+Text::Similarity - Measure the pair-wise Similarity of Files or Strings 
 
 =head1 SYNOPSIS
 
@@ -306,6 +306,7 @@ existed in your input (in effect).
 =over
 =item * Compoundify and stemming currently not supported.
 =item * Granularity option in getSimilarity not supported.
+=item * Cleaning should probably be optional. 
 =back
 
 =head1 SEE ALSO
@@ -323,7 +324,7 @@ existed in your input (in effect).
  Jason Michelizzi
 
 Last modified by :
-$Id: Similarity.pm,v 1.19 2008/04/04 17:28:36 tpederse Exp $
+$Id: Similarity.pm,v 1.23 2008/04/06 01:54:28 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -22,7 +22,7 @@ our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw();
 
-our $VERSION = '0.04';
+our $VERSION = '0.05';
 
 # information about granularity is not used now
 # the would be that you could figure out similarity
@@ -68,8 +68,10 @@ sub DESTROY
 
 # this method requires that the input be provided in files. 
 # this is now just a front end to getSimilarityStrings that 
-# does file handling. Actual similarity measuresments are
+# does file handling. Actual similarity measurements are
 # performed between strings in getSimilarityStrings.
+
+# this seems like it might want to move up into Similarity.pm
 
 sub getSimilarity
 {
@@ -120,6 +122,8 @@ sub getSimilarity
     }
     $str2 =~ s/\s+/ /g;
 
+    # find compounds, not working right now
+
     $str1 = $self->compoundify ($str1);
     $str2 = $self->compoundify ($str2);
 
@@ -140,7 +144,7 @@ sub getSimilarity
 }
 
 # this method measures the similarity between two strings. If a string is empty
-# or missing then we throw an exception
+# or missing then we generate an error and return undefined
 
 sub getSimilarityStrings {
 
@@ -160,25 +164,48 @@ sub getSimilarityStrings {
 	    return undef;
     }
 
-    # clean the strings
+    # clean the strings, maybe make this optional
 
     my $str1 .= $self->sanitizeString ($input1);
     my $str2 .= $self->sanitizeString ($input2);
 
+    # find compounds, not working right now
+
+    $str1 = $self->compoundify ($str1);
+    $str2 = $self->compoundify ($str2);
+
+    # this is where we find our overlaps....
+    # then we score them using both the standard overlaps measure
+    # as well as based on the lesk.pm module from WordNet-Similarity
+
     my ($overlaps, $wc1, $wc2) = $self->finder->getOverlaps ($str1, $str2);
+
     my $score = 0;
+    my $raw_lesk = 0;
+
     if ($self->verbose) {
 	print "keys: ", scalar keys %$overlaps, "\n";
     }
+
     foreach my $key (sort keys %$overlaps) {
+
 	my @words = split /\s+/, $key;
 
 	if ($self->verbose) {
 	    print "-->'$key' len(", scalar @words, ") cnt(", $overlaps->{$key}, ")\n";
 	}
 
+	    # find out how many words match, add 1 for each match 
+
 	#$score += scalar @words * scalar @words * ${$overlaps}{$key};
 	$score += scalar @words * $overlaps->{$key};
+
+            # find the length of the key, square it, multiply with its
+            # value to get the lesk score for this particular match
+
+        my $value = ($#words + 1) * ($#words + 1) * ${$overlaps}{$key};
+        $raw_lesk += $value;
+
     }
 
     # fix for divide by zero error, will short circuit when score is 0
@@ -187,28 +214,50 @@ sub getSimilarityStrings {
 
     if ($score == 0){
 	return $score;
-	}
+    }
 
     # end of fix
 
     if ($self->normalize) {
+
 	if ($self->verbose) {
 	    print "wc 1: $wc1\n";
 	    print "wc 2: $wc2\n";
 	}
+
 	my $prec = $score / $wc2;
 	my $recall = $score / $wc1;
 	my $f = 2 * $prec * $recall / ($prec + $recall);
+
+        # display them, if requested
+
 	if ($self->verbose) {
 	    print " Raw score: $score\n";
 	    print " Precision: $prec\n";
 	    print " Recall   : $recall\n";
 	    print " F-measure: $f\n";
+	    my $dice = 2 * $score / ($wc1 + $wc2) ;
+	    print " Dice     : $dice\n";
+
 	    my $e = 1 - $f;
 	    print " E-measure: $e\n";
+
 	    my $cos = $score / sqrt ($wc1 * $wc2);
 	    print " Cosine   : $cos\n";
-	    my $jaccard; # intersection / union
+	
+
+            my $lesk = $raw_lesk/ ($wc1 * $wc2);
+	    print " Raw lesk : $raw_lesk\n";
+	    print " Lesk     : $lesk\n";
+
+#
+# other measures could be added here in the verbose output, 
+# and some kind of option could be used to cause a different
+# value to be returned as the default. other measures to 
+# include might be the jaccard coefficient ....
+# jaccard is 2*raw_score / union of string1 and string2
+#
+
 	}
 	$score = $f;
     }
@@ -224,11 +273,11 @@ __END__
 
 =head1 NAME
 
-Text::Similarity::Overlaps - Score the Matches Found Between Two Strings
+Text::Similarity::Overlaps - Score the Overlaps Found Between Two Strings Based on Literal Text Matching
 
 =head1 SYNOPSIS
 
-          # you can measure the similarity between two input strings
+          # you can measure the similarity between two input strings : 
 	  # if you don't normalize the score, you get the number of matching words
           # if you normalize, you get a score between 0 and 1 that is scaled based
 	  # on the length of the strings
@@ -244,7 +293,7 @@ Text::Similarity::Overlaps - Score the Matches Found Between Two Strings
           my $string2 = 'we can test getSimilarityStrings this day';
 
 	  my $score = $mod->getSimilarityStrings ($string1, $string2);
-       	  print "The number of matching words between string1 and string2 is : $score\n";
+       	  print "There are $score overlapping words between string1 and string2\n";
 
 	  # you may want to measure the similarity of a document
           # sentence by sentence - the below example shows you
@@ -259,18 +308,19 @@ Text::Similarity::Overlaps - Score the Matches Found Between Two Strings
 	  # this just calls getSimilarity( ) for each pair of sentences
 
 	  use Text::Similarity::Overlaps;
-	  my %options = ('normalize' => 1, 'verbose' =>1, 'stoplist' => 'stoplist.txt');
+	  my %options = ('normalize' => 1, 'verbose' =>1, 
+					'stoplist' => 'stoplist.txt');
 	  my $mod = Text::Similarity::Overlaps->new (\%options);
           defined $mod or die "Construction of Text::Similarity::Overlaps failed";
 
-	  @file1_sentences = qw / sent11.txt sent12.txt sent13.txt /;
-	  @file2_sentences = qw / sent21.txt sent22.txt sent23.txt /;
+	  @file1s = qw / sent11.txt sent12.txt sent13.txt /;
+	  @file2s = qw / sent21.txt sent22.txt sent23.txt /;
 
           # assumes that both documents have same number of sentences 
 
-	  for ($i=0; $i <= $#file1_sentences; $i++) {
-	          my $score = $mod->getSimilarity ($file1_sentences[$i], $file2_sentences[$i]);
-        	  print "The similarity of $file1_sentences[$i] and $file2_sentences[$i] is : $score\n";
+	  for ($i=0; $i <= $#file1s; $i++) {
+	          my $score = $mod->getSimilarity ($file1s[$i], $file2s[$i]);
+        	  print "The similarity of $file1s[$i] and $file2s[$i] is : $score\n";
 	  }
 
 	  my $score = $mod->getSimilarity ('file1.txt', 'file2.txt');
@@ -278,13 +328,84 @@ Text::Similarity::Overlaps - Score the Matches Found Between Two Strings
 
 =head1 DESCRIPTION
 
-This module computes the similarity of two text documents or strings by searching for 
-literal word token overlaps. At present comparisons are made between  entire documents, 
-and finer granularity is not supported. Files are treated as one long input string, so 
-overlaps can be found across sentence and paragraph boundaries. 
+This module computes the similarity of two text documents or strings by 
+searching for  literal word token overlaps. This just means that it 
+determines how many word tokens are are identical between the two 
+strings. Various scores are computed based on the number of shared 
+words, and the length of the strings. 
 
-Files are first converted into strings by getSimilarity(), then getSimilarityStrings()  
-does the actual processing. 
+At present similarity measurements are made between entire files or  
+strings, and  finer granularity is not supported. Files are treated as 
+one long input string, so overlaps can be found across sentence and 
+paragraph boundaries. 
+
+Files are first converted into strings by getSimilarity(), then 
+getSimilarityStrings() does the actual processing. It counts the number 
+of overlaps (matching words) and finds the longest common subsequences 
+(phrases) between the two strings. However, most of the measures except 
+for lesk do not use the information about phrasal matches. 
+
+Text::Similarity::Overlaps returns the F-measure, which is a normalized 
+value between 0 and 1. Normalization can be turned off by specifying 
+--no-normalize, in which case the raw_score is returned, which is simply 
+the number of words that overlap between the two strings. 
+
+In addition, Overlaps displays the cosine, E-measure, precision, recall, 
+Dice coefficient, and Lesk scores when used in the verbose mode. If 
+verbose is not turned on then only the F-measure is returned.
+   
+     precision = raw_score / length_file_2
+     recall = raw_score / length_file_1
+     F-measure = 2 * precision * recall / (precision + recall)
+     Dice = 2 * raw_score / (sum of string lengths)
+     E-measure = 1 - F-measure
+     Cosine = raw_score / sqrt (precision + recall)
+     Lesk = sum of the squares of the length of phrasal matches  
+	 (normalized by dividing by the product of the string lengths)
+
+The raw_score is simply the number of matching words between the two
+inputs, without respect to their order. Note that matches are literal 
+and must be exact, so 'cat' and 'cats' do not match. This corresponds to 
+the idea of the intersection between the two strings. 
+
+None of these measures (except lesk) considers the order of the matches. 
+In those cases 'jim bit the dog' and 'the dog bit jim' are considered 
+exact matches and will attain the highest possible matching score, 
+which would be a raw_score of 4 if not normalized and 1 if the score is 
+normalized (which would result in the f-measure being returned). 
+
+lesk is different in that it looks for phrasal matches and scores them 
+more highly. The lesk measure is based on the measure of the same name 
+included in L<WordNet::Similarity>. There it is used to match the 
+overlapping text found in the gloss entries of the lexical database / 
+dictionary WordNet in order to measure semantic relatedness. 
+
+The lesk measure finds the length of all the overlaps and squares them. 
+It then sums those scores, and if the score is normalized divides them 
+by the product of the lengths of the strings. For example:
+
+	the dog bit jim
+	jim bit the dog
+
+The raw_score is 4, since the two strings are made up of identical 
+words (just in different orders). The F-measure is equal to 1, as are 
+the Cosine, and the Dice Coefficient. In fact, the F-Measure and the 
+Dice Coefficient are always equivalent, but both are presented since 
+some users may be more familiar with one formulation versus the other. 
+
+The raw_lesk score is 2^2 + 1 + 1 = 6, because 'the dog' is a phrasal 
+match between the strings and thus contributes it's length squared to 
+the raw_lesk score. The normalized lesk score is 0.375, which is 6 / 
+(4 * 4), or the raw_lesk score divided by the product of the lengths of 
+the two strings. Note that the normalized lesk score has a maximum value 
+of 1, since if there are n words in the two strings, then their maximum 
+overlap is n words, which receives a raw_lesk score of n^2, which is 
+the divided by the product of the string lengths, which is again n^2.. 
+ 
+There is some cleaning of text performed automatically, which includes
+removal of most punctuation except embedded apostrophes and
+underscores. All text is made lower case. This occurs both for file and
+string input.
 
 =head1 SEE ALSO
 
@@ -298,7 +419,7 @@ does the actual processing.
  Jason Michelizzi
 
 Last modified by : 
-$Id: Overlaps.pm,v 1.18 2008/04/04 18:30:19 tpederse Exp $
+$Id: Overlaps.pm,v 1.24 2008/04/06 03:00:38 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 

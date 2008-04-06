@@ -1,5 +1,5 @@
 bin/stoplist.txt
-bin/text_compare.pl
+bin/text_similarity.pl
 CHANGES
 doc/CHANGES.pod
 doc/INSTALL.pod
@@ -22,6 +22,6 @@ t/getsimilaritystrings.t
 t/no-normalize.t
 t/normalize.t
 t/overlaps.t
-t/text_compare.t
-t/text_compare_string.t
+t/text_similarity.t
+t/text_similarity_string.t
 META.yml                                 Module meta-data (added by MakeMaker)

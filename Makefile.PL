@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 # See lib/ExtUtils/MakeMaker.pm for details of how to influence
 # the contents of the Makefile that is written.
 
-my @programs = qw(text_compare.pl);
+my @programs = qw(text_similarity.pl);
 
 WriteMakefile(
     NAME              => 'Text::Similarity',

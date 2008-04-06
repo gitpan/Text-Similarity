@@ -50,7 +50,7 @@ if (defined $help) {
 }
 elsif (defined $version) {
     print <<"EOT";
-text_compare.pl version ${VERSION}
+text_similarity.pl version ${VERSION}
 Copyright (C) 2004-2008, Jason Michelizzi and Ted Pedersen
 
 This program comes with ABSOLUTELY NO WARRANTY.  This is free
@@ -180,7 +180,7 @@ sub showUsage
 	$detailed = 1;
     }
     print <<'EOT';
-Usage: text_compare.pl [[--verbose] [--stoplist=FILE] --type=TYPE
+Usage: text_similarity.pl [[--verbose] [--stoplist=FILE] --type=TYPE
                         [--no-normalize] FILE1 FILE2 | --string STR1 STR2 
                        | --help | --version]
 EOT
@@ -208,51 +208,51 @@ __END__
 
 =head1 NAME
 
-text_compare.pl - Measure the similarity between files or strings
+text_simlarity.pl - Measure the pair-wise similarity between files or strings
 
 =head1 SYNOPSIS
 
- text_compare.pl --type Text::Similarity::Overlaps --normalize --string '.......this is one' '????this is two' 
+ text_similarity.pl --type Text::Similarity::Overlaps --normalize 
+                         --string '.......this is one' '????this is two' 
 
- text_compare.pl --type Text::Similarity::Overlaps --no-normalize --string '.......this is one' '????this is two' 
+ text_similarity.pl --type Text::Similarity::Overlaps --no-normalize 
+                         --string '.......this is one' '????this is two' 
 
- text_compare.pl --type Text::Similarity::Overlaps --string 'sir winston churchill' 'Churchill, Winston Sir' 
+ text_similarity.pl --type Text::Similarity::Overlaps 
+                         --string 'sir winston churchill' 'Churchill, Winston Sir' 
 
- text_compare.pl --type Text::Similarity::Overlaps ../GPL.txt ../FDL.txt
+ text_similarity.pl --type Text::Similarity::Overlaps ../GPL.txt ../FDL.txt
 
- text_compare.pl --verbose --type Text::Similarity::Overlaps ../GPL.txt ../FDL.txt 
+ text_similarity.pl --verbose --type Text::Similarity::Overlaps ../GPL.txt ../FDL.txt 
 
- text_compare.pl --verbose --stoplist stoplist.txt --type Text::Similarity::Overlaps ../GPL.txt ../FDL.txt 
+ text_similarity.pl --verbose --stoplist stoplist.txt --type Text::Similarity::Overlaps 
+			../GPL.txt ../FDL.txt 
 
- text_compare.pl [[--verbose] [--stoplist=FILE] [--no-normalize] [--string]] --type=TYPE | --help | --version] FILE1 FILE2
+ text_similarity.pl [[--verbose] [--stoplist=FILE] [--no-normalize] [--string]] 
+			--type=TYPE | --help | --version] FILE1 FILE2
 
 =head1 DESCRIPTION
 
 This script is a simple command-line interface to the Text::Similarity
-Perl modules. At present only one method of computing similarity is 
-provided, Text::Similarity::Overlaps. However, additional methods can be 
-added. The output described below for this program comes from 
-Text::Similarity::Overlaps, but could vary in future as additional 
-similarity measurement methods are added. 
+Perl modules. A method for computing similarity must be specified
+via the --type option, and then that method is used to measure the
+similarity of two strings or two files. 
+
+Text::Similarity::Overlaps measures similarity by counting the 
+number of words that overlap (match) between the two inputs, without
+regard to order. So, all of the following strings would have the
+same pairwise similarity (they would each have a raw score of 4
+relative to each other, meaning that 4 words are overlapping or
+matching).
+
+ winston churchill was here 
+ here was winston churchill
+ winston was here churchill
 
 By default Text::Similarity::Overlaps returns a normalized F-measure 
 between 0 and 1. Normalization can be turned off by specifying 
---no-normalize.
-
-In addition, it can return the cosine, E-measure, precision, and recall 
-when used in the verbose mode (specify --verbose in the command line). 
-
- precision = raw_score / length_file_2
- recall = raw_score / length_file_1
- F-measure = 2 * precision * recall / (precision + recall)
- E-measure = 1 - F-measure
- cosine = raw_score / sqrt (precision + recall) 
-
-Files are treated as one long line of text. 
-
-There is some cleaning of text performed automatically, which includes removal of most 
-punctuation except embedded apostrophies and underscores. All text is made lower case. 
-This occurs both for file and string input. 
+--no-normalize. It returns various other overlap based scores if
+you specify --verbose. 
 
 =head1 OPTIONS
 
@@ -280,7 +280,8 @@ Input will be provided on the command line as strings, not files.
 =item B<--verbose>
 
 Show all the matches that are found between the files, their length and 
-frequency, as well as precision, recall, F-measure, E-measure, and cosine.
+frequency, as well as precision, recall, F-measure, E-measure, Cosine, 
+and the Dice Coefficient.
 
 =item B<--help>
 
@@ -300,7 +301,7 @@ Show version information.
  Jason Michelizzi
 
 Last modified by:
-$Id: text_compare.pl,v 1.15 2008/04/04 18:30:17 tpederse Exp $
+$Id: text_similarity.pl,v 1.2 2008/04/06 03:00:37 tpederse Exp $
 
 =head1 BUGS
 
@@ -329,4 +330,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 =cut
+
+
 

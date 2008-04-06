@@ -2,6 +2,26 @@ NAME
     CHANGES - Revision history for Text::Similarity
 
 DESCRIPTION
+    0.06
+    Released April x, 2008 (all changes by TDP)
+
+    *   Added Dice coefficient to Overlaps.pm output. Dice is equivalent to
+        F-measure, but formulated slightly differently so could be useful to
+        catch errors.
+
+    *   Modified Overlaps method to provide lesk text matching score, that
+        is the sum of the squared lengths of all phrasal matches (optionally
+        normalized by the product of the lengths of the strings). It
+        provides both Raw lesk and lesk (the normalized form) when run in
+        verbose mode.
+
+    *   Reogranized some documentation to make it more clear that Overlaps
+        is just one possible way of measuring similarity, and that other
+        methods can and should be added.
+
+    *   Renamed text_compare.pl as the more natural and fitting
+        text_similarity.pl
+
     0.05
     Released April 4, 2008 (all changes by TDP)
 
@@ -75,8 +95,8 @@ AUTHORS
      Ted Pedersen, University of Minnesota, Duluth
      tpederse at d.umn.edu
 
-    This document last modified by : $Id: CHANGES.pod,v 1.10 2008/04/04
-    17:28:35 tpederse Exp $
+    This document last modified by : $Id: CHANGES.pod,v 1.12 2008/04/05
+    04:44:41 tpederse Exp $
 
 SEE ALSO
 COPYRIGHT AND LICENSE
