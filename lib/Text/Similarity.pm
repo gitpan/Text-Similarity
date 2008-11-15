@@ -14,7 +14,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 # Attributes -- these all have lvalue accessor methods, use those methods
 # instead of accessing directly.  If you add another attribute, be sure
@@ -324,7 +324,7 @@ existed in your input (in effect).
  Jason Michelizzi
 
 Last modified by :
-$Id: Similarity.pm,v 1.23 2008/04/06 01:54:28 tpederse Exp $
+$Id: Similarity.pm,v 1.24 2008/11/15 02:07:18 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 

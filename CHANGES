@@ -2,8 +2,21 @@ NAME
     CHANGES - Revision history for Text::Similarity
 
 DESCRIPTION
+    0.07
+    Released November 14, 2008 (all changes by TDP)
+
+    *   Changed test case that was tripping up Windows. In Linux these are
+        treated as being the same (when order doesn't matter) but this is
+        not the case in Windows.
+
+                'sir winston churchill' 'winston churchill SIR!!!' 
+
+        The case has been changed to :
+
+                'sir winston churchill' 'winston churchill sir' 
+
     0.06
-    Released April x, 2008 (all changes by TDP)
+    Released April 5, 2008 (all changes by TDP)
 
     *   Added Dice coefficient to Overlaps.pm output. Dice is equivalent to
         F-measure, but formulated slightly differently so could be useful to
@@ -95,8 +108,8 @@ AUTHORS
      Ted Pedersen, University of Minnesota, Duluth
      tpederse at d.umn.edu
 
-    This document last modified by : $Id: CHANGES.pod,v 1.12 2008/04/05
-    04:44:41 tpederse Exp $
+    This document last modified by : $Id: CHANGES.pod,v 1.13 2008/04/06
+    03:00:37 tpederse Exp $
 
 SEE ALSO
 COPYRIGHT AND LICENSE

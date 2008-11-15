@@ -4,9 +4,29 @@ CHANGES - Revision history for Text::Similarity
 
 =head1 DESCRIPTION
 
+=item 0.07
+
+Released November 14, 2008 (all changes by TDP)
+
+=over 
+
+=item
+
+Changed test case that was tripping up Windows. In Linux these are 
+treated as being the same (when order doesn't matter) but this is not 
+the case in Windows. 
+
+	'sir winston churchill' 'winston churchill SIR!!!' 
+
+The case has been changed to :
+
+	'sir winston churchill' 'winston churchill sir' 
+
+=back
+
 =item 0.06
 
-Released April x, 2008 (all changes by TDP)
+Released April 5, 2008 (all changes by TDP)
 
 =over
 
@@ -171,7 +191,7 @@ original version; created by h2xs 1.23 with options -b 5.6.0 -A -X Text::Similar
  tpederse at d.umn.edu
 
 This document last modified by :
-$Id: CHANGES.pod,v 1.13 2008/04/06 03:00:37 tpederse Exp $
+$Id: CHANGES.pod,v 1.14 2008/11/15 02:07:18 tpederse Exp $
 
 =head1 SEE ALSO
 

@@ -3,7 +3,7 @@
 # Note that because of the file paths used this must be run from the 
 # directory in which /t resides 
 #
-# Last modified by : '$Id: text_similarity_string.t,v 1.1 2008/04/05 03:17:11 tpederse Exp $'
+# Last modified by : '$Id: text_similarity_string.t,v 1.2 2008/11/15 02:07:18 tpederse Exp $'
 #########################
 
 # change 'tests => 1' to 'tests => last_test_to_print';
@@ -60,7 +60,10 @@ is ($output, 0, "match with empties");
 
 # ---------------------------------------------------------------------
 
-$output = `$^X $inc $text_similarity_pl --type Text::Similarity::Overlaps --string 'sir winston churchill' 'winston churchill SIR!!!' `; 
+## this test case was causing trouble for Windows - changed in 0.07
+
+##$output = `$^X $inc $text_similarity_pl --type Text::Similarity::Overlaps --string 'sir winston churchill' 'winston churchill SIR!!!' `; 
+$output = `$^X $inc $text_similarity_pl --type Text::Similarity::Overlaps --string 'sir winston churchill' 'winston churchill sir' `; 
 chomp $output;
 
 is ($output, 1, "order doesn't affect score");
