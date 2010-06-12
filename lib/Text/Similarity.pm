@@ -14,7 +14,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.07';
+our $VERSION = '0.08';
 
 # Attributes -- these all have lvalue accessor methods, use those methods
 # instead of accessing directly.  If you add another attribute, be sure
@@ -262,7 +262,7 @@ Text::Similarity - Measure the pair-wise Similarity of Files or Strings
       # you can pass those parameters to Overlaps.pm via hash arguments
 
       use Text::Similarity::Overlaps;
-      my %options = ('verbose' => 1, 'stoplist' => '../../bin/stoplist.txt');
+      my %options = ('verbose' => 1, 'stoplist' => '../../samples/stoplist.txt');
 
       my $mod = Text::Similarity::Overlaps->new (\%options);
       defined $mod or die "Construction of Text::Similarity::Overlaps failed";
@@ -323,13 +323,16 @@ existed in your input (in effect).
 
  Jason Michelizzi
 
+ Ying Liu, University of Minnesota, Twin Cities
+ liux0395 at umn.edu
+
 Last modified by :
-$Id: Similarity.pm,v 1.24 2008/11/15 02:07:18 tpederse Exp $
+$Id: Similarity.pm,v 1.26 2010/06/12 01:04:23 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004-2008, Ted Pedersen, Jason Michelizzi, and Siddharth 
-Patwardhan
+Copyright (C) 2004-2010, Ted Pedersen, Jason Michelizzi, Siddharth 
+Patwardhan, and Ying Liu
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

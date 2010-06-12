@@ -34,8 +34,6 @@ CONTENTS
         that can be used to conveniently measure two files for similarity.
         Please see the perldoc for this program for more details.
 
-        It also includes a copy of the SMART stop list (stoplist.txt)
-
     /lib
         This directory contains the Perl modules that do the actual work of
         disambiguation. By default, these files are installed into
@@ -52,6 +50,10 @@ CONTENTS
     /t  This directory contains test scripts. These scripts are run when you
         execute 'make test'.
 
+    /samples
+        It includes two formats of stoplist file, one word per line
+        (stoplist.txt) and regular expression format (stoplist-nsp.regex).
+
 SEE ALSO
     <http://www.d.umn.edu/~tpederse/text-similarity.html>
 
@@ -67,7 +69,10 @@ AUTHORS
 
      Jason Michelizzi 
 
-    Last modified by: $Id: README.pod,v 1.12 2008/04/05 04:31:19 tpederse
+     Ying Liu, University of Minnesota, Twin Cities
+     liux0395 at umn.edu
+
+    Last modified by: $Id: README.pod,v 1.14 2010/06/10 21:40:59 liux0395
     Exp $
 
 COPYRIGHT AND LICENSE

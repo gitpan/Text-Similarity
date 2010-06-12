@@ -3,7 +3,7 @@
 # Note that because of the file paths used this must be run from the 
 # directory in which /t resides 
 #
-# Last modified by : '$Id: text_similarity_string.t,v 1.2 2008/11/15 02:07:18 tpederse Exp $'
+# Last modified by : '$Id: text_similarity_string.t,v 1.4 2010/06/11 21:04:08 liux0395 Exp $'
 #########################
 
 # change 'tests => 1' to 'tests => last_test_to_print';
@@ -16,7 +16,7 @@ use File::Spec;
 $text_similarity_pl = File::Spec->catfile ('bin','text_similarity.pl');
 ok (-e $text_similarity_pl);
 
-$stoplist_txt = File::Spec->catfile ('bin','stoplist.txt');
+$stoplist_txt = File::Spec->catfile ('samples','stoplist-nsp.regex');
 ok (-e $stoplist_txt);
 
 # use this to find Text::Similarity::Overlaps module

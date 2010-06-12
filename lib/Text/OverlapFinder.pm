@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 our @ISA = ();
-our $VERSION = '0.02';
+our $VERSION = '0.03';
 
 use constant MARKER => '###';
 
@@ -13,7 +13,7 @@ sub containsReplace(\@@);
 
 ## stemmer support not available as yet
 
-my %stoplist;
+my $stopregex = "";
 my %stemmer;
 
 # new (stoplist => $stoplist, stemmer => 1)
@@ -60,7 +60,6 @@ sub new
 sub DESTROY
 {
     my $self = shift;
-    delete $stoplist{$self};
     delete $stemmer{$self};
 }
 
@@ -81,8 +80,12 @@ sub getOverlaps
     $string1 =~ s/^\s+//;
     $string1 =~ s/\s+$//;
 
-    $string0 = $self->_removeStopWords ($string0);
-    $string1 = $self->_removeStopWords ($string1);
+
+	if ($stopregex ne "")
+	{
+    	$string0 = $self->_removeStopWords ($string0);
+    	$string1 = $self->_removeStopWords ($string1);
+	}
 
     # if stemming on, stem the two strings
     my $stemmingReqd = 0;
@@ -255,7 +258,10 @@ sub _removeStopWords
     my @words = split /\s+/, $str;
     my @newwords;
     foreach my $word (@words) {
-	push (@newwords, $word) unless exists $stoplist{$self}->{$word};
+		if(!($word =~ /$stopregex/))
+        {
+			push (@newwords, $word); 
+        }
     }
     return join (' ', @newwords);
 }
@@ -265,12 +271,25 @@ sub _loadStoplist
     my $self = shift;
     my $list = shift;
     open FH, '<', $list or die "Cannot open stoplist file '$list': $!";
-   
+  
+	$stopregex = "(";
     while (<FH>) {
-	chomp;
-	$stoplist{$self}->{$_} = 1;
+		chomp;
+		if ($_ ne "")
+		{	
+			$_=~s/\///g;
+			if ($_=~m/\\b/)
+			{
+				$stopregex .= "$_|";
+			}
+			else
+			{
+				my $word = "\\b"."$_"."\\b";
+				$stopregex .= "$word|";
+			}
+		}
     }
-
+	chop $stopregex; $stopregex .= ")";
     close FH;
 }
 
@@ -327,13 +346,16 @@ but no stemmer is provided by this package as yet.
 
  Jason Michelizzi 
 
+ Ying Liu, University of Minnesota, Twin Cities
+ liux0395 at umn.edu
+
 Last modified by:
-$Id: OverlapFinder.pm,v 1.11 2008/04/04 17:28:36 tpederse Exp $
+$Id: OverlapFinder.pm,v 1.14 2010/06/09 21:12:49 liux0395 Exp $
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004-2008 by Jason Michelizzi, Ted Pedersen, Siddharth 
-Patwardhan, and Satanjeev Banerjee
+Copyright (C) 2004-2010 by Jason Michelizzi, Ted Pedersen, Siddharth 
+Patwardhan, Satanjeev Banerjee and Ying Liu
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

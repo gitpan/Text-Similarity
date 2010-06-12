@@ -2,118 +2,129 @@ NAME
     CHANGES - Revision history for Text::Similarity
 
 DESCRIPTION
+    0.08
+        Released June 11, 2010 (all changes by YL)
+
+        *   Changed the stoplist option. stoplist file can be one word per
+            line or one word in the regular expression format per line, or
+            the mix of these two formats.
+
     0.07
-    Released November 14, 2008 (all changes by TDP)
+        Released November 14, 2008 (all changes by TDP)
 
-    *   Changed test case that was tripping up Windows. In Linux these are
-        treated as being the same (when order doesn't matter) but this is
-        not the case in Windows.
+        *   Changed test case that was tripping up Windows. In Linux these
+            are treated as being the same (when order doesn't matter) but
+            this is not the case in Windows.
 
-                'sir winston churchill' 'winston churchill SIR!!!' 
+                    'sir winston churchill' 'winston churchill SIR!!!'
 
-        The case has been changed to :
+            The case has been changed to :
 
-                'sir winston churchill' 'winston churchill sir' 
+                    'sir winston churchill' 'winston churchill sir'
 
     0.06
-    Released April 5, 2008 (all changes by TDP)
+        Released April 5, 2008 (all changes by TDP)
 
-    *   Added Dice coefficient to Overlaps.pm output. Dice is equivalent to
-        F-measure, but formulated slightly differently so could be useful to
-        catch errors.
+        *   Added Dice coefficient to Overlaps.pm output. Dice is equivalent
+            to F-measure, but formulated slightly differently so could be
+            useful to catch errors.
 
-    *   Modified Overlaps method to provide lesk text matching score, that
-        is the sum of the squared lengths of all phrasal matches (optionally
-        normalized by the product of the lengths of the strings). It
-        provides both Raw lesk and lesk (the normalized form) when run in
-        verbose mode.
+        *   Modified Overlaps method to provide lesk text matching score,
+            that is the sum of the squared lengths of all phrasal matches
+            (optionally normalized by the product of the lengths of the
+            strings). It provides both Raw lesk and lesk (the normalized
+            form) when run in verbose mode.
 
-    *   Reogranized some documentation to make it more clear that Overlaps
-        is just one possible way of measuring similarity, and that other
-        methods can and should be added.
+        *   Reogranized some documentation to make it more clear that
+            Overlaps is just one possible way of measuring similarity, and
+            that other methods can and should be added.
 
-    *   Renamed text_compare.pl as the more natural and fitting
-        text_similarity.pl
+        *   Renamed text_compare.pl as the more natural and fitting
+            text_similarity.pl
 
     0.05
-    Released April 4, 2008 (all changes by TDP)
+        Released April 4, 2008 (all changes by TDP)
 
-    *   Made it possible for users to input strings directly via
-        text_compare.pl and getSimilarityStrings. Previously it was only
-        possible to directly measure the similarity of files, but now
-        strings can be measured.
+        *   Made it possible for users to input strings directly via
+            text_compare.pl and getSimilarityStrings. Previously it was only
+            possible to directly measure the similarity of files, but now
+            strings can be measured.
 
     0.04
-    Released March 21, 2008 (all changes by TDP)
+        Released March 21, 2008 (all changes by TDP)
 
-    *   Introduced tests for text_compare.pl (t/text_compare.t) - added
-        support for os neutral file reads via FILE::SPEC in this and other
-        .t files.
+        *   Introduced tests for text_compare.pl (t/text_compare.t) - added
+            support for os neutral file reads via FILE::SPEC in this and
+            other .t files.
 
-    *   Introduced tests for getOverlaps (t/overlaps.t)
+        *   Introduced tests for getOverlaps (t/overlaps.t)
 
-    *   Improved synopsis examples to show how to pass options via arguments
-        in hashes
+        *   Improved synopsis examples to show how to pass options via
+            arguments in hashes
 
-    *   Clarified that stemming and compounding are not currently supported
-        disabled compfile option in text_compare.pl
+        *   Clarified that stemming and compounding are not currently
+            supported disabled compfile option in text_compare.pl
 
-    *   Made file handling in text_compare more robust so that when a file
-        does not exist an error message is given and failure is immediate
+        *   Made file handling in text_compare more robust so that when a
+            file does not exist an error message is given and failure is
+            immediate
 
-    *   Changed method of passing constants in test cases from (eg.)
-        "Text::Similarity::NORMALIZE" to "normalize" in order to support
-        backwards compatability with perl 5.6.
+        *   Changed method of passing constants in test cases from (eg.)
+            "Text::Similarity::NORMALIZE" to "normalize" in order to support
+            backwards compatability with perl 5.6.
 
-    *   Introduce normalize and no-normalize tests for getSimilarity
+        *   Introduce normalize and no-normalize tests for getSimilarity
 
-    *   Fix Similarity.pm Synopsis example not to use files in /t that are
-        no longer available
+        *   Fix Similarity.pm Synopsis example not to use files in /t that
+            are no longer available
 
     0.03
-    Released March 20, 2008 (all changes by TDP)
+        Released March 20, 2008 (all changes by TDP)
 
-    *   fix divide by zero errors reported on cpan by cernst at esoft.com,
-        who also provided fix
+        *   fix divide by zero errors reported on cpan by cernst at
+            esoft.com, who also provided fix
 
-    *   update test cases to improve coverage of partial matches and no
-        matches
+        *   update test cases to improve coverage of partial matches and no
+            matches
 
-    *   update synopsis examples so they can be run via cut and paste
+        *   update synopsis examples so they can be run via cut and paste
 
-    *   improve README content to make it more descriptive
+        *   improve README content to make it more descriptive
 
-    *   introduce /doc directory for pod of INSTALL README and CHANGES
+        *   introduce /doc directory for pod of INSTALL README and CHANGES
 
-    *   introduce 'use constant' to support perl 5.6
+        *   introduce 'use constant' to support perl 5.6
 
     0.02
-    Released October 16, 2004, all changes by JM
+        Released October 16, 2004, all changes by JM
 
-    *   fixed overlap finding & added new module Text::OverlapFinder
+        *   fixed overlap finding & added new module Text::OverlapFinder
 
-    *   improved command-line interface
+        *   improved command-line interface
 
-    *   improved documentation and help messages
+        *   improved documentation and help messages
 
-    *   added support for a stoplist
+        *   added support for a stoplist
 
     0.01
-    Released September 23, 2004, all changes by JM
+        Released September 23, 2004, all changes by JM
 
-    *   original version; created by h2xs 1.23 with options -b 5.6.0 -A -X
-        Text::Similarity
+        *   original version; created by h2xs 1.23 with options -b 5.6.0 -A
+            -X Text::Similarity
 
 AUTHORS
      Ted Pedersen, University of Minnesota, Duluth
      tpederse at d.umn.edu
 
-    This document last modified by : $Id: CHANGES.pod,v 1.13 2008/04/06
-    03:00:37 tpederse Exp $
+     Ying Liu, University of Minnesota, Twin Cities
+     liux0395 at umn.edu
+
+    This document last modified by : $Id: CHANGES.pod,v 1.17 2010/06/10
+    21:38:02 liux0395 Exp $
 
 SEE ALSO
 COPYRIGHT AND LICENSE
-    Copyright (c) 2004-2008 Ted Pedersen
+    Copyright (c) 2004-2010 Ted Pedersen
 
     Permission is granted to copy, distribute and/or modify this document
     under the terms of the GNU Free Documentation License, Version 1.2 or

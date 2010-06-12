@@ -189,15 +189,15 @@ EOT
 	print <<'EOT1';
 
 --type=TYPE       The type of measure you want to use.  Possible measures:
-                      Text::Similarity::Overlaps
+                  Text::Similarity::Overlaps
 --verbose         Show verbose output
 --stoplist=FILE   A plain text file that specifies words that should be 
-		  ignored in calculating similarity. Specify one word per
-                  line, avoid extra spaces after words.
+                  ignored in calculating similarity. Specify one word or one word 
+                  in the regular expression per line, avoid extra spaces after words.
 --no-normalize    Do not normalize scores.  Normally, scores are normalized
                   so that they range from 0 to 1.  Using this option will
-		  give you a raw score instead.
---string	  Input will be given as strings rather than files.
+                  give you a raw score instead.
+--string          Input will be given as strings rather than files.
 --help            Show this help message
 --version         Show version information.
 EOT1
@@ -266,7 +266,10 @@ The type of text similarity measure.  Valid values include:
 
 =item B<--stoplist>=I<FILE>
 
-The name of a file containing stop words (one word per line). 
+The name of a file containing stop words. Under the ./sample directory, 
+we give two formats of the stop words format, one word per line(stoplist.txt) and 
+one word in the regular expression format per line(stoplist-nsp.regex). If you 
+want to mix these two formats to make your own stop words file, it is also all right. 
 
 =item B<--no-normalize>
 
@@ -300,8 +303,11 @@ Show version information.
 
  Jason Michelizzi
 
+ Ying Liu, University of Minnesota, Twin Cities
+ liux0395 at umn.edu
+
 Last modified by:
-$Id: text_similarity.pl,v 1.2 2008/04/06 03:00:37 tpederse Exp $
+$Id: text_similarity.pl,v 1.4 2010/06/10 21:31:24 liux0395 Exp $
 
 =head1 BUGS
 
@@ -313,7 +319,7 @@ $Id: text_similarity.pl,v 1.2 2008/04/06 03:00:37 tpederse Exp $
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2004-2008, Jason Michelizzi and Ted Pedersen
+Copyright (C) 2004-2010, Jason Michelizzi, Ted Pedersen and Ying Liu
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

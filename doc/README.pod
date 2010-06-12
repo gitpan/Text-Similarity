@@ -40,8 +40,6 @@ This directory contains a driver program called text_similarity.pl that can
 be used to conveniently measure two files for similarity. Please see 
 the perldoc for this program for more details.
 
-It also includes a copy of the SMART stop list (stoplist.txt) 
-
 =item /lib
 
 This directory contains the Perl modules that do the actual work of
@@ -60,6 +58,11 @@ should be considered read only.
 
 This directory contains test scripts.  These scripts are run when you
 execute 'make test'.
+
+=item /samples
+
+It includes two formats of stoplist file, one word per line (stoplist.txt) 
+and regular expression format (stoplist-nsp.regex).
 
 =back
 
@@ -80,8 +83,12 @@ L<http://www.d.umn.edu/~tpederse/text-similarity.html>
 
  Jason Michelizzi 
 
+ Ying Liu, University of Minnesota, Twin Cities
+ liux0395 at umn.edu
+
+
 Last modified by:
-$Id: README.pod,v 1.12 2008/04/05 04:31:19 tpederse Exp $
+$Id: README.pod,v 1.14 2010/06/10 21:40:59 liux0395 Exp $
 
 =head1 COPYRIGHT AND LICENSE
 
