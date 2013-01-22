@@ -2,6 +2,25 @@ NAME
     CHANGES - Revision history for Text::Similarity
 
 DESCRIPTION
+    0.09
+        Released January 22, 2013
+
+        *   This release includes changes contributed by Myroslava Dzikovska
+            that provide the full set of similarity scores programmatically.
+            She modified the interface so that the getSimilarity function
+            returns a pair ($score, %allScores) where %allScores is a hash
+            of all possible scores that it computes. She made it so that in
+            scalar context it will only return $score, so it is fully
+            backwards compatible with the older versions. She also changed
+            the printing to STDERR, to make it easier to use the code in
+            filter scripts that depend on STDIN/STDOUT.
+
+        *   This release also inludes changes ontributed by Nathan Glen to
+            allow test cases to pass on Windows. The single quote used
+            previously caused arguments to the script not to be passed
+            corrected, leading to test failures. The single quotes have been
+            changed to double quotes.
+
     0.08
         Released June 11, 2010 (all changes by YL)
 
@@ -119,8 +138,8 @@ AUTHORS
      Ying Liu, University of Minnesota, Twin Cities
      liux0395 at umn.edu
 
-    This document last modified by : $Id: CHANGES.pod,v 1.17 2010/06/10
-    21:38:02 liux0395 Exp $
+    This document last modified by : $Id: CHANGES.pod,v 1.18 2010/06/12
+    01:04:23 tpederse Exp $
 
 SEE ALSO
 COPYRIGHT AND LICENSE

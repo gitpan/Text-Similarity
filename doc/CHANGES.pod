@@ -6,6 +6,36 @@ CHANGES - Revision history for Text::Similarity
 
 =over
 
+=item 0.09
+
+Released January 22, 2013 
+
+=over
+
+=item 
+
+This release includes changes contributed by Myroslava Dzikovska that provide
+the full set of similarity scores programmatically. She modified the interface 
+so that the getSimilarity function returns a pair  ($score, %allScores) where 
+%allScores is a hash of all possible scores that it computes. She made it so 
+that in scalar context it will only return $score, so it is fully backwards 
+compatible with the older versions. She also changed the printing to 
+STDERR, to make it easier to use the code in filter scripts that depend 
+on STDIN/STDOUT.
+
+=item 
+
+This release also inludes changes ontributed by Nathan Glen to allow test
+cases to pass on Windows. The single quote used previously caused arguments
+to the script not to be passed corrected, leading to test failures. The single
+quotes have been changed to double quotes. 
+
+=back
+
+=back
+
+=over
+
 =item 0.08
 
 Released June 11, 2010 (all changes by YL)

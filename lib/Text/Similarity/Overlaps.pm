@@ -134,13 +134,12 @@ sub getSimilarity
 # just measure the similarity of two strings. So we have our files converted
 # into strings, and now measure their similarity.
 
-    my $score = $self -> getSimilarityStrings ($str1,$str2);
+    my ($score, %allScores) = $self -> getSimilarityStrings ($str1,$str2);
 
 # end getSimilarity here, making sure to return similarity value from 
 # get SimilarityStrings
 
-    return $score;
-
+    return wantarray ? ($score, %allScores) : $score;
 }
 
 # this method measures the similarity between two strings. If a string is empty
@@ -182,9 +181,10 @@ sub getSimilarityStrings {
 
     my $score = 0;
     my $raw_lesk = 0;
-
+    my %allScores = ('wc1' => $wc1, 'wc2' => $wc2);
+ 
     if ($self->verbose) {
-	print "keys: ", scalar keys %$overlaps, "\n";
+	print STDERR "keys: ", scalar keys %$overlaps, "\n";
     }
 
     foreach my $key (sort keys %$overlaps) {
@@ -192,14 +192,14 @@ sub getSimilarityStrings {
 	my @words = split /\s+/, $key;
 
 	if ($self->verbose) {
-	    print "-->'$key' len(", scalar @words, ") cnt(", $overlaps->{$key}, ")\n";
+	    print STDERR "-->'$key' len(", scalar @words, ") cnt(", $overlaps->{$key}, ")\n";
 	}
 
 	    # find out how many words match, add 1 for each match 
 
 	#$score += scalar @words * scalar @words * ${$overlaps}{$key};
 	$score += scalar @words * $overlaps->{$key};
-
+	$allScores{'raw'} = $score;
             # find the length of the key, square it, multiply with its
             # value to get the lesk score for this particular match
 
@@ -213,56 +213,64 @@ sub getSimilarityStrings {
     # who reported via rt.cpan.org ticket 29902
 
     if ($score == 0){
-	return $score;
+	$allScores{'raw'} = 0;
+	$allScores{'precision'} = 0;
+	$allScores{'recall'} = 0;
+	$allScores{'F'} = 0;
+	$allScores{'dice'} = 0;
+	$allScores{'E'} = 0;
+	$allScores{'cosine'} = 0;
+	$allScores{'raw_lesk'} = 0;	    
+	$allScores{'lesk'} = 0;
+	
+	return wantarray ? ($score, %allScores) : $score;
     }
 
     # end of fix
 
-    if ($self->normalize) {
-
-	if ($self->verbose) {
-	    print "wc 1: $wc1\n";
-	    print "wc 2: $wc2\n";
-	}
-
-	my $prec = $score / $wc2;
-	my $recall = $score / $wc1;
-	my $f = 2 * $prec * $recall / ($prec + $recall);
-
-        # display them, if requested
-
-	if ($self->verbose) {
-	    print " Raw score: $score\n";
-	    print " Precision: $prec\n";
-	    print " Recall   : $recall\n";
-	    print " F-measure: $f\n";
-	    my $dice = 2 * $score / ($wc1 + $wc2) ;
-	    print " Dice     : $dice\n";
-
-	    my $e = 1 - $f;
-	    print " E-measure: $e\n";
-
-	    my $cos = $score / sqrt ($wc1 * $wc2);
-	    print " Cosine   : $cos\n";
+    my $prec = $score / $wc2;
+    my $recall = $score / $wc1;
+    my $f = 2 * $prec * $recall / ($prec + $recall);
+    
+    my $dice = 2 * $score / ($wc1 + $wc2) ;
+    my $e = 1 - $f;
+    my $cos = $score / sqrt ($wc1 * $wc2);
+    my $lesk = $raw_lesk/ ($wc1 * $wc2);
+    
+    $allScores{'precision'} = $prec;
+    $allScores{'recall'} = $recall;
+    $allScores{'F'} = $f;
+    $allScores{'dice'} = $dice;
+    $allScores{'E'} = $e;
+    $allScores{'cosine'} = $cos;
+    $allScores{'raw_lesk'} = $raw_lesk;	    
+    $allScores{'lesk'} = $lesk;
+    
+    # display them, if requested
+    if ($self->verbose) {
+	print STDERR "wc 1: $wc1\n";
+	print STDERR "wc 2: $wc2\n";
+	print STDERR " Raw score: $score\n";
+	print STDERR " Precision: $prec\n";
+	print STDERR " Recall   : $recall\n";
+	print STDERR " F-measure: $f\n";
+	print STDERR " Dice     : $dice\n";
+	print STDERR " E-measure: $e\n";
+	print STDERR " Cosine   : $cos\n";
+	print STDERR " Raw lesk : $raw_lesk\n";
+	print STDERR " Lesk     : $lesk\n";
 	
-
-            my $lesk = $raw_lesk/ ($wc1 * $wc2);
-	    print " Raw lesk : $raw_lesk\n";
-	    print " Lesk     : $lesk\n";
-
 #
-# other measures could be added here in the verbose output, 
-# and some kind of option could be used to cause a different
-# value to be returned as the default. other measures to 
 # include might be the jaccard coefficient ....
 # jaccard is 2*raw_score / union of string1 and string2
 #
-
-	}
+    }
+    
+    if ($self->normalize) {
 	$score = $f;
     }
-
-    return $score;
+    
+    return wantarray ? ($score, %allScores) : $score;    
 }
 
 sub doStop {0}
@@ -350,9 +358,8 @@ value between 0 and 1. Normalization can be turned off by specifying
 --no-normalize, in which case the raw_score is returned, which is simply 
 the number of words that overlap between the two strings. 
 
-In addition, Overlaps displays the cosine, E-measure, precision, recall, 
-Dice coefficient, and Lesk scores when used in the verbose mode. If 
-verbose is not turned on then only the F-measure is returned.
+In addition, Overlaps returns the cosine, E-measure, precision, recall, 
+Dice coefficient, and Lesk scores in the allScores table.
    
      precision = raw_score / length_file_2
      recall = raw_score / length_file_1

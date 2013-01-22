@@ -14,7 +14,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.08';
+our $VERSION = '0.09';
 
 # Attributes -- these all have lvalue accessor methods, use those methods
 # instead of accessing directly.  If you add another attribute, be sure
@@ -244,7 +244,10 @@ Text::Similarity - Measure the pair-wise Similarity of Files or Strings
 =head1 SYNOPSIS
 
       # this will return an un-normalized score that just gives the
-      # number of overlaps
+      # number of overlaps by default (or F1 if normalize is set),
+      # plus a hash table of other scores, with the following keys
+      #	'wc1', 'wc2', 'raw', 'precision', 'recall', 'F', 'dice', 'E', 'cosine', 'raw_lesk','lesk'
+      # wc1 and wc2 are respective word counts; see Overlaps.pm for definitions of other scores
 
       use Text::Similarity::Overlaps;
       my $mod = Text::Similarity::Overlaps->new;
@@ -258,8 +261,15 @@ Text::Similarity - Measure the pair-wise Similarity of Files or Strings
       my $score = $mod->getSimilarity ($text_file1, $text_file2);
       print "The similarity of $text_file1 and $text_file2 is : $score\n";
 
-      # if you want to turn on the verbose option and provide a stoplist
+      my ($score1, %allScores) = $mod->getSimilarity ($text_file1, $text_file2);
+      print "The raw similarity of $text_file1 and $text_file2 is : $allScores{'raw'}\n";
+      print "The lesk score of $text_file1 and $text_file2 is : $allScores{'lesk'}\n";
+
+
+      # if you want to turn on the verbose options and provide a stoplist
       # you can pass those parameters to Overlaps.pm via hash arguments
+
+      # the verbose option causes extra scores to be printed to STDERR
 
       use Text::Similarity::Overlaps;
       my %options = ('verbose' => 1, 'stoplist' => '../../samples/stoplist.txt');
@@ -271,9 +281,10 @@ Text::Similarity - Measure the pair-wise Similarity of Files or Strings
       # these paths are valid from lib/Text/Similarity
       my $text_file1 = 'Overlaps.pm';
       my $text_file2 = '../OverlapFinder.pm';
-
-      my $score = $mod->getSimilarity ($text_file1, $text_file2);
-      print "The similarity of $text_file1 and $text_file2 is : $score\n";
+     
+      my ($score, %allScores) = $mod->getSimilarity ($text_file1, $text_file2);
+      print "The raw similarity of $text_file1 and $text_file2 is : $allScores{'raw'}\n";
+      print "The lesk score of $text_file1 and $text_file2 is : $allScores{'lesk'}\n";
 
 =head1 DESCRIPTION
 
