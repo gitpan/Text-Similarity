@@ -14,7 +14,7 @@ require Exporter;
 
 our @ISA = qw(Exporter);
 
-our $VERSION = '0.09';
+our $VERSION = '0.10';
 
 # Attributes -- these all have lvalue accessor methods, use those methods
 # instead of accessing directly.  If you add another attribute, be sure

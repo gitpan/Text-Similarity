@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Text-Similarity
-version:            0.09
+version:            0.10
 abstract:           Measure the pair-wise Similarity of Files or Strings 
 author:
     - Ted Pedersen <tpederse at d.umn.edu>

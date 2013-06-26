@@ -60,10 +60,11 @@ is ($output, 0, "match with empties");
 
 # ---------------------------------------------------------------------
 
-## this test case was causing trouble for Windows - changed in 0.07
+## this test case was causing trouble for Windows - changed in 0.07, and
+## then again in 0.10
 
-##$output = `$^X $inc $text_similarity_pl --type Text::Similarity::Overlaps --string "sir winston churchill" "winston churchill SIR!!!"`; 
-$output = `$^X $inc $text_similarity_pl --type Text::Similarity::Overlaps --string 'sir winston churchill' 'winston churchill sir' `; 
+$output = `$^X $inc $text_similarity_pl --type Text::Similarity::Overlaps --string "sir winston churchill" "winston churchill SIR!!!"`; 
+##$output = `$^X $inc $text_similarity_pl --type Text::Similarity::Overlaps --string 'sir winston churchill' 'winston churchill sir' `; 
 chomp $output;
 
 is ($output, 1, "order doesn't affect score");

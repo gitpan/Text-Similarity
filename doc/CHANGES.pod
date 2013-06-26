@@ -6,11 +6,22 @@ CHANGES - Revision history for Text::Similarity
 
 =over
 
+=item 0.10
+
+Released June 26, 2013 
+
+=item 
+
+Version 0.09 did not fix the windows testing error that we thought was fixed in 0.09.
+We think it has been fixed now. :) 
+
+=back
+
+=over
+
 =item 0.09
 
 Released January 22, 2013 
-
-=over
 
 =item 
 
@@ -29,8 +40,6 @@ This release also inludes changes ontributed by Nathan Glen to allow test
 cases to pass on Windows. The single quote used previously caused arguments
 to the script not to be passed corrected, leading to test failures. The single
 quotes have been changed to double quotes. 
-
-=back
 
 =back
 
